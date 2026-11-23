@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ff6b4a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Darna">
+<title>Darna</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@500;700;800;900&family=Cairo:wght@600;700;800;900&display=swap">
+<style>
+/* Darna ("our home"): three siblings in Fez, New York and Doha saving for one apartment in Morocco.
+   IDEA: a Moroccan house whose windows light up as the family fund grows.
+   COLOUR: Majorelle blue, terracotta, sand, zellige gold; each sibling has a colour of their own.
+   TYPE: Fraunces for the dream, Nunito / Cairo for everything you read.
+   LAYOUT: one column, phone first; the house picture on top, actions under it, details below. */
+:root {
+  --bg: #fff8ef; --card: #ffffff; --soft: #fff1e0; --ink: #2a2140; --muted: #7a6f86; --line: #f3e2cc;
+  --blue: #4b5cff; --blue-2: #3443d6; --terra: #ff6b4a; --gold: #ffb703; --teal: #12b39a; --red: #e5484d; --pink: #ff4f8b; --purple: #7b5cff; --on: #ffffff;
+  --shadow: 0 8px 24px rgba(255, 107, 74, .10); --hero: linear-gradient(135deg, #ff9a3c 0%, #ff5e7e 52%, #7b5cff 100%); --input: #ffffff;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16122a; --card: #211b3a; --soft: #2c2550; --ink: #f7f3ff; --muted: #b9b0d0; --line: #3a3163;
+    --blue: #8f9bff; --blue-2: #6f7cf0; --terra: #ff8a6b; --gold: #ffc94d; --teal: #3ee0c4; --red: #ff7a70; --pink: #ff7aa6; --purple: #a08cff; --on: #16122a;
+    --shadow: 0 8px 24px rgba(0, 0, 0, .45); --hero: linear-gradient(135deg, #e8742a 0%, #d63d6c 52%, #5a3fd6 100%); --input: #1b1631;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16122a; --card: #211b3a; --soft: #2c2550; --ink: #f7f3ff; --muted: #b9b0d0; --line: #3a3163;
+  --blue: #8f9bff; --blue-2: #6f7cf0; --terra: #ff8a6b; --gold: #ffc94d; --teal: #3ee0c4; --red: #ff7a70; --pink: #ff7aa6; --purple: #a08cff; --on: #16122a;
+  --shadow: 0 8px 24px rgba(0, 0, 0, .45); --hero: linear-gradient(135deg, #e8742a 0%, #d63d6c 52%, #5a3fd6 100%); --input: #1b1631;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--gold) 20%, transparent), transparent 42%), radial-gradient(circle at 100% 35%, color-mix(in srgb, var(--pink) 12%, transparent), transparent 45%), radial-gradient(circle at 0% 90%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 45%), var(--bg); background-attachment: fixed; color: var(--ink); font-family: "Nunito", "Cairo", -apple-system, system-ui, "Segoe UI", sans-serif; font-size: 15.5px; line-height: 1.55;
+  padding: env(safe-area-inset-top, 0px) 0 calc(86px + env(safe-area-inset-bottom, 0px)); }
+:root[dir="rtl"] body { font-family: "Cairo", "Nunito", -apple-system, system-ui, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+bdi { unicode-bidi: isolate; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 14px max(16px, env(safe-area-inset-left, 0px)) 14px max(16px, env(safe-area-inset-right, 0px)); }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 2px 12px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand img { width: 40px; height: 40px; border-radius: 12px; flex: none; }
+.brand-name { font-family: "Fraunces", "Cairo", serif; font-weight: 800; font-size: 22px; line-height: 1.1; }
+.brand-sub { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-r { display: flex; gap: 6px; align-items: center; flex: none; }
+.pill-btn { border: 1.5px solid var(--line); background: var(--card); border-radius: 99px; padding: 6px 12px; font-weight: 800; font-size: 13px; cursor: pointer; }
+.sync-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); flex: none; }
+.sync-dot.ok { background: var(--teal); } .sync-dot.busy { background: var(--gold); } .sync-dot.err { background: var(--red); }
+.tab { display: none; } .tab.on { display: block; animation: rise .3s ease; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.card h3 { font-size: 16.5px; font-weight: 900; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.card h3 small { font-size: 12.5px; color: var(--muted); font-weight: 800; }
+.hint { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 6px; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.row:last-child { border-bottom: none; }
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.stat { background: var(--soft); border-radius: 14px; padding: 10px 12px; min-width: 0; }
+.stat small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 800; }
+.stat b { font-size: 19px; font-weight: 900; }
+.bar { height: 10px; border-radius: 10px; background: var(--soft); overflow: hidden; display: flex; }
+.bar > i { display: block; height: 100%; transition: width .6s ease; }
+.bar > i.one { border-radius: 10px; background: linear-gradient(90deg, var(--terra), var(--gold)); }
+label { display: block; font-size: 12.5px; font-weight: 800; color: var(--muted); margin-bottom: 4px; }
+input, select, textarea { width: 100%; padding: 12px 13px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--input); font-size: 16px; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--terra); }
+.fg { margin-bottom: 12px; min-width: 0; }
+.btn { display: block; width: 100%; border: none; border-radius: 15px; padding: 13px 14px; font-weight: 900; font-size: 15.5px; cursor: pointer; text-align: center; transition: transform .08s; }
+.btn:active { transform: scale(.97); }
+.btn-main { background: linear-gradient(135deg, var(--terra), var(--pink)); color: #fff; box-shadow: 0 8px 20px color-mix(in srgb, var(--pink) 35%, transparent); }
+.btn-terra { background: linear-gradient(135deg, var(--purple), var(--blue)); color: #fff; }
+.btn-soft { background: var(--soft); color: var(--ink); }
+.btn-sm { padding: 9px 12px; font-size: 13.5px; border-radius: 12px; }
+.seg { display: flex; background: var(--soft); border-radius: 14px; padding: 4px; gap: 4px; }
+.seg button { flex: 1; border: none; background: transparent; border-radius: 11px; padding: 9px 4px; font-weight: 800; font-size: 13px; cursor: pointer; color: var(--muted); min-width: 0; }
+.seg button.on { background: var(--card); color: var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+/* the house */
+.dream { position: relative; border-radius: 26px; overflow: hidden; color: #fff; background: var(--hero); min-height: 260px; box-shadow: var(--shadow); margin-bottom: 14px; }
+.dream-photo { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.dream::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(40, 15, 40, .78) 0%, rgba(40, 15, 40, .25) 55%, rgba(40, 15, 40, 0) 100%); pointer-events: none; }
+.dream.nophoto::after { background: none; }
+.dream.nophoto .dream-photo { background-image: radial-gradient(circle at 20px 20px, rgba(255,255,255,.16) 3px, transparent 4px), radial-gradient(circle at 85% 15%, rgba(255, 215, 120, .55), transparent 30%); background-size: 40px 40px, 100% 100%; }
+.dream-in { position: relative; z-index: 1; padding: 18px; display: flex; flex-direction: column; justify-content: flex-end; min-height: 260px; gap: 8px; }
+.dream-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.dream-title { font-family: "Fraunces", "Cairo", serif; font-size: 25px; font-weight: 800; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,.35); }
+.dream-city { font-size: 13px; font-weight: 800; opacity: .9; }
+.photo-btn { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 99px; padding: 6px 11px; font-size: 12.5px; font-weight: 800; cursor: pointer; flex: none; }
+.dream-nums { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.dream-pct { font-family: "Fraunces", "Nunito", serif; font-size: clamp(40px, 13vw, 54px); font-weight: 800; line-height: 1; }
+.dream-saved { text-align: end; font-weight: 800; font-size: 14px; line-height: 1.5; }
+.dream-saved b { font-size: 21px; }
+.dream .bar { background: rgba(255,255,255,.28); height: 12px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+.dream .bar > i { box-shadow: inset -2px 0 0 rgba(255,255,255,.6); }
+/* the house that builds itself */
+.house { display: block; width: 100%; max-width: 420px; height: auto; margin: 2px auto 0; overflow: visible; }
+.house .p { opacity: 0; transform: translateY(8px) scale(.94); transform-box: fill-box; transform-origin: 50% 100%; transition: opacity .7s ease, transform .8s cubic-bezier(.2, 1.4, .4, 1); }
+.house .p.on { opacity: 1; transform: none; }
+#fillLine { filter: drop-shadow(0 0 4px #ffb703); }
+.burst { position: absolute; left: 50%; top: 46%; z-index: 3; transform: translate(-50%, 0); font-weight: 900; font-size: 26px; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.35), 0 0 18px #ffb703; pointer-events: none; white-space: nowrap; direction: ltr; unicode-bidi: isolate; animation: burst 2.2s ease-out forwards; }
+@keyframes burst { 0% { opacity: 0; transform: translate(-50%, 30px) scale(.6); } 15% { opacity: 1; transform: translate(-50%, 0) scale(1.15); } 70% { opacity: 1; transform: translate(-50%, -40px) scale(1); } 100% { opacity: 0; transform: translate(-50%, -70px) scale(.95); } }
+.house.flash { animation: flash 1.6s ease-out; }
+@keyframes flash { 0% { filter: none; } 25% { filter: drop-shadow(0 0 18px #ffd166) brightness(1.15); } 100% { filter: none; } }
+.house .sun { animation: sun 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes sun { 50% { transform: scale(1.08); } }
+.house .heart.on { animation: beat 1.4s ease-in-out infinite; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.18); } 30% { transform: scale(1); } }
+.stage { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.35); border-radius: 99px; padding: 4px 11px; font-size: 12.5px; font-weight: 900; }
+/* streak */
+.streak { display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, color-mix(in srgb, var(--gold) 26%, var(--card)), color-mix(in srgb, var(--terra) 16%, var(--card))); border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--line)); border-radius: 18px; padding: 11px 14px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.streak .fire { font-size: 28px; line-height: 1; }
+.streak b { font-size: 15px; font-weight: 900; display: block; }
+.streak span { font-size: 12.5px; color: var(--muted); font-weight: 800; }
+/* rooms */
+.rooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.room { position: relative; border-radius: 16px; padding: 12px 6px 10px; text-align: center; background: var(--soft); border: 1.5px dashed var(--line); cursor: pointer; min-width: 0; }
+.room .ri { font-size: 28px; line-height: 1.1; display: block; filter: grayscale(1); opacity: .45; }
+.room .rn { font-size: 12.5px; font-weight: 900; display: block; margin-top: 4px; }
+.room .rs { font-size: 11px; font-weight: 800; color: var(--muted); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.room.open { border-style: solid; background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 22%, var(--card)), var(--card)); border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); }
+.room.open .ri { filter: none; opacity: 1; }
+.room.mine, .room.taken { background: linear-gradient(160deg, color-mix(in srgb, var(--mc) 22%, var(--card)), var(--card)); border-color: color-mix(in srgb, var(--mc) 50%, var(--line)); }
+.room .own { position: absolute; top: 6px; inset-inline-end: 6px; width: 20px; height: 20px; border-radius: 50%; background: var(--mc); color: #fff; font-size: 11px; font-weight: 900; display: grid; place-items: center; }
+/* family messages */
+.wall .msg { display: flex; gap: 9px; align-items: flex-start; padding: 9px 0; }
+.wall .bub { flex: 1; min-width: 0; background: color-mix(in srgb, var(--mc) 12%, var(--card)); border: 1px solid color-mix(in srgb, var(--mc) 28%, var(--line)); border-radius: 4px 16px 16px 16px; padding: 8px 11px; }
+:root[dir="rtl"] .wall .bub { border-radius: 16px 4px 16px 16px; }
+.wall .msg.me { flex-direction: row-reverse; }
+.wall .msg.me .bub { border-radius: 16px 4px 16px 16px; }
+:root[dir="rtl"] .wall .msg.me .bub { border-radius: 4px 16px 16px 16px; }
+.wall .mwho { font-size: 12px; font-weight: 900; color: var(--mc); }
+.wall .tx { font-size: 15px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.wall .big { font-size: 30px; line-height: 1.2; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.chips button { border: 1px solid var(--line); background: var(--card); border-radius: 99px; padding: 5px 11px; font-size: 18px; cursor: pointer; }
+.send { display: flex; gap: 8px; }
+.send input { flex: 1; min-width: 0; }
+.send button { flex: none; width: auto; padding: 0 16px; }
+/* daily welcome */
+.welcome { text-align: center; }
+.welcome .wh { font-size: 54px; line-height: 1; margin: 4px 0 6px; }
+.welcome .wg { font-family: "Fraunces", "Cairo", serif; font-size: 24px; font-weight: 800; }
+.welcome .wm { font-family: "Fraunces", "Cairo", serif; font-size: 18px; font-weight: 600; line-height: 1.6; margin: 12px 4px 14px; }
+.welcome .wst { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+
+/* siblings */
+.fam { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; margin-bottom: 14px; }
+.mem { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 12px 8px; text-align: center; box-shadow: var(--shadow); min-width: 0; position: relative; }
+.mem.me { border: 2px solid var(--mc); }
+.av { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 18px; color: #fff; background: var(--mc); margin: 0 auto 6px; }
+.mem .nm { font-weight: 900; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mem .amt { font-weight: 900; font-size: 15.5px; }
+.mem .sub { font-size: 11.5px; color: var(--muted); font-weight: 800; line-height: 1.4; }
+.mem .pl { height: 6px; border-radius: 6px; background: var(--soft); margin-top: 6px; overflow: hidden; }
+.mem .pl i { display: block; height: 100%; background: var(--mc); }
+.quote { font-family: "Fraunces", "Cairo", serif; font-size: 17px; font-weight: 600; line-height: 1.6; }
+.quote-card { background: linear-gradient(135deg, color-mix(in srgb, var(--gold) 30%, var(--card)), color-mix(in srgb, var(--pink) 12%, var(--card))); border-color: color-mix(in srgb, var(--gold) 45%, var(--line)); }
+.tint-mint { background: linear-gradient(160deg, color-mix(in srgb, var(--teal) 14%, var(--card)), var(--card) 70%); border-color: color-mix(in srgb, var(--teal) 30%, var(--line)); }
+.tint-purple { background: linear-gradient(160deg, color-mix(in srgb, var(--purple) 13%, var(--card)), var(--card) 70%); border-color: color-mix(in srgb, var(--purple) 28%, var(--line)); }
+.tint-pink { background: linear-gradient(160deg, color-mix(in srgb, var(--pink) 11%, var(--card)), var(--card) 70%); border-color: color-mix(in srgb, var(--pink) 26%, var(--line)); }
+.stat:nth-child(1) { background: color-mix(in srgb, var(--terra) 14%, var(--card)); } .stat:nth-child(2) { background: color-mix(in srgb, var(--purple) 14%, var(--card)); }
+.stat:nth-child(3) { background: color-mix(in srgb, var(--teal) 15%, var(--card)); } .stat:nth-child(4) { background: color-mix(in srgb, var(--gold) 20%, var(--card)); }
+.mem { background: linear-gradient(180deg, color-mix(in srgb, var(--mc) 16%, var(--card)), var(--card) 65%); border-color: color-mix(in srgb, var(--mc) 30%, var(--line)); }
+.mem .done { position: absolute; top: 8px; inset-inline-end: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--mc); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; }
+.av { box-shadow: 0 4px 12px color-mix(in srgb, var(--mc) 45%, transparent); }
+.heart { border: 1px solid var(--line); background: var(--card); border-radius: 99px; padding: 3px 9px; font-size: 12.5px; cursor: pointer; flex: none; font-weight: 800; color: var(--muted); }
+.heart.on { background: color-mix(in srgb, var(--pink) 15%, var(--card)); border-color: color-mix(in srgb, var(--pink) 40%, var(--line)); color: var(--pink); }
+.months { display: flex; align-items: flex-end; gap: 8px; height: 150px; padding-top: 10px; }
+.mcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; min-width: 0; }
+.mstack { width: 100%; max-width: 38px; display: flex; flex-direction: column-reverse; border-radius: 9px; overflow: hidden; background: var(--soft); }
+.mstack i { display: block; width: 100%; }
+.mcol small { font-size: 11px; color: var(--muted); font-weight: 800; white-space: nowrap; }
+.mcol b { font-size: 10.5px; font-weight: 900; white-space: nowrap; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; font-weight: 800; color: var(--muted); margin-top: 8px; }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--mc); margin-inline-end: 5px; vertical-align: -1px; }
+.apt { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.apt:last-child { border-bottom: none; }
+.apt .ic { width: 42px; height: 42px; border-radius: 14px; background: linear-gradient(135deg, var(--gold), var(--terra)); display: grid; place-items: center; flex: none; color: #fff; font-size: 20px; }
+.apt .bd { flex: 1; min-width: 0; }
+.apt .tt { font-weight: 900; overflow-wrap: anywhere; }
+.apt a { color: var(--purple); font-weight: 800; font-size: 13px; overflow-wrap: anywhere; }
+.miles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.mile { text-align: center; padding: 10px 4px; border-radius: 14px; background: var(--soft); font-size: 11.5px; font-weight: 800; color: var(--muted); }
+.mile svg { width: 30px; height: 30px; display: block; margin: 0 auto 4px; }
+.mile.got { background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 35%, var(--card)), color-mix(in srgb, var(--pink) 12%, var(--card))); color: var(--ink); }
+.feed .item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+.feed .item:last-child { border-bottom: none; }
+.feed .dot { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 13px; color: #fff; background: var(--mc); flex: none; }
+.feed .txt { flex: 1; min-width: 0; font-size: 14px; }
+.feed .when { font-size: 12px; color: var(--muted); font-weight: 700; }
+.x { border: 1px solid var(--line); background: none; color: var(--muted); border-radius: 9px; padding: 3px 8px; font-size: 12px; cursor: pointer; flex: none; }
+.pos { color: var(--teal); font-weight: 900; } .neg { color: var(--red); font-weight: 900; }
+.feed .item.tapme { cursor: pointer; }
+.feed .item.tapme:active { background: color-mix(in srgb, var(--mc) 10%, transparent); border-radius: 12px; }
+.more { width: 100%; margin-top: 10px; border: 1.5px solid var(--line); background: var(--card); border-radius: 14px; padding: 9px; font-weight: 800; font-size: 13.5px; cursor: pointer; color: var(--muted); }
+.mrow { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .85fr) minmax(0, 1fr) auto; gap: 8px; align-items: end; margin-bottom: 10px; }
+.mrow .del { border: 1.5px solid var(--line); background: var(--card); color: var(--red); border-radius: 12px; padding: 11px 11px; font-weight: 900; cursor: pointer; line-height: 1; }
+.swatch { width: 14px; height: 14px; border-radius: 5px; display: inline-block; vertical-align: -2px; margin-inline-end: 5px; }
+
+nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: color-mix(in srgb, var(--card) 92%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr);
+  padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); }
+nav button { border: none; background: none; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; font-size: 11.5px; font-weight: 800; color: var(--muted); cursor: pointer; border-radius: 14px; }
+nav button svg { width: 24px; height: 24px; }
+nav button.on { color: var(--terra); background: color-mix(in srgb, var(--terra) 13%, transparent); }
+
+.sheet-bg { position: fixed; inset: 0; z-index: 50; background: rgba(10, 12, 25, .5); display: flex; align-items: flex-end; justify-content: center; }
+.sheet { background: var(--card); width: 100%; max-width: 640px; border-radius: 24px 24px 0 0; padding: 18px max(16px, env(safe-area-inset-left, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px)); max-height: 92vh; overflow-y: auto; animation: up .3s cubic-bezier(.2, 1, .3, 1); }
+@keyframes up { from { transform: translateY(100%); } }
+.sheet h2 { font-size: 19px; font-weight: 900; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.amt-input { font-size: 34px; font-weight: 900; text-align: center; padding: 14px; direction: ltr; }
+.who { position: fixed; inset: 0; z-index: 60; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; gap: 14px; }
+.who h2 { font-family: "Fraunces", "Cairo", serif; font-size: 28px; }
+.who .fam { width: 100%; max-width: 420px; }
+.who .mem { cursor: pointer; padding: 16px 8px; }
+#toast { position: fixed; left: 16px; right: 16px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 70; background: var(--ink); color: var(--bg); padding: 12px 14px; border-radius: 15px; font-weight: 800; text-align: center; display: none; box-shadow: 0 10px 30px rgba(0,0,0,.3); max-width: 608px; margin: 0 auto; }
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 80; overflow: hidden; }
+.confetti i { position: absolute; top: -14px; width: 9px; height: 14px; border-radius: 3px; animation: fall 2s ease-in forwards; }
+@keyframes fall { to { transform: translateY(105vh) rotate(600deg); opacity: .7; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <img src="icons/icon-192.png" alt="">
+      <div style="min-width:0;"><div class="brand-name" id="brandName">Darna</div><div class="brand-sub" id="brandSub"></div></div>
+    </div>
+    <div class="top-r"><span class="sync-dot" id="syncDot" title=""></span><button type="button" class="pill-btn" id="langBtn" onclick="toggleLang()">العربية</button></div>
+  </div>
+
+  <!-- HOME -->
+  <section class="tab on" id="tab-home">
+    <div class="dream" id="dream">
+      <div class="dream-photo" id="dreamPhoto"></div>
+      <div class="dream-in">
+        <div class="dream-top">
+          <div><div class="dream-title" id="dreamTitle"></div><div class="dream-city" id="dreamCity"></div></div>
+          <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;"><button type="button" class="photo-btn" id="photoBtn" onclick="document.getElementById('photoIn').click()"></button><button type="button" class="photo-btn" id="shareBtn" onclick="shareProgress()"></button></div>
+        </div>
+        <svg class="house" id="house" viewBox="0 0 320 196" aria-hidden="true">
+          <defs>
+            <pattern id="bricks" width="16" height="8" patternUnits="userSpaceOnUse"><rect width="16" height="8" fill="#fff6ea"/><path d="M0 7.5H16M8 0V4M0 3.5H16M0 4V8M16 4V8" stroke="#ecd9bd" stroke-width="1"/></pattern>
+            <pattern id="zel" width="12" height="10" patternUnits="userSpaceOnUse"><rect width="12" height="10" fill="#12b39a"/><path d="M6 0L11 5L6 10L1 5Z" fill="#ffb703"/><circle cx="6" cy="5" r="1.8" fill="#ff6b4a"/></pattern>
+            <!-- the whole future home, drawn once and shown twice: as a see-through ghost, and in colour up to where we have saved -->
+            <g id="houseArt">
+              <rect x="66" y="170" width="188" height="10" rx="2" fill="#d9c3a5"/>
+              <rect x="76" y="80" width="168" height="90" fill="url(#bricks)"/><rect x="76" y="80" width="168" height="90" fill="none" stroke="#e3cba8" stroke-width="1.5"/>
+              <rect x="76" y="94" width="168" height="8" fill="url(#zel)"/>
+              <path d="M96 146V124a12 12 0 0 1 24 0V146Z" fill="#2b3f8f"/><path d="M200 146V124a12 12 0 0 1 24 0V146Z" fill="#2b3f8f"/><path d="M94 148H122M198 148H226" stroke="#c9a77a" stroke-width="3"/>
+              <rect x="70" y="72" width="180" height="9" rx="1" fill="#f3dfc3"/><path d="M70 72V64h10v8M90 72V64h10v8M110 72V64h10v8M130 72V64h10v8M150 72V64h20v8M180 72V64h10v8M200 72V64h10v8M220 72V64h10v8M240 72V64h10v8" fill="#f3dfc3"/><path d="M152 64V52a8 8 0 0 1 16 0V64Z" fill="#12b39a"/>
+              <path d="M141 170V140a19 19 0 0 1 38 0V170Z" fill="#ffb703"/><path d="M146 170V141a14 14 0 0 1 28 0V170Z" fill="#4b5cff"/><circle cx="168" cy="156" r="2" fill="#ffd166"/>
+              <path d="M282 180c2-22 1-40-3-56" stroke="#a0704a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M279 124c-14-6-26-2-32 6 12-4 22-4 32-6zM279 124c12-10 26-10 34-4-12 0-24 2-34 4zM279 124c-4-12-14-20-24-20 8 6 16 12 24 20zM279 124c6-12 18-18 28-16-10 4-20 10-28 16z" fill="#12b39a"/>
+              <circle cx="56" cy="174" r="9" fill="#12b39a"/><circle cx="48" cy="172" r="5" fill="#ff4f8b"/><circle cx="62" cy="168" r="4" fill="#ffb703"/>
+              <rect x="128" y="160" width="10" height="10" rx="2" fill="#ff6b4a"/><circle cx="133" cy="156" r="6" fill="#12b39a"/><rect x="182" y="160" width="10" height="10" rx="2" fill="#ff6b4a"/><circle cx="187" cy="156" r="6" fill="#12b39a"/>
+            </g>
+            <filter id="ghost" x="-5%" y="-5%" width="110%" height="110%"><feColorMatrix type="saturate" values=".15"/><feComponentTransfer><feFuncR type="linear" slope=".55" intercept=".45"/><feFuncG type="linear" slope=".55" intercept=".45"/><feFuncB type="linear" slope=".55" intercept=".45"/><feFuncA type="linear" slope=".5"/></feComponentTransfer></filter>
+            <clipPath id="fillClip"><rect id="fillRect" x="0" y="180" width="320" height="0"/></clipPath>
+          </defs>
+          <circle class="sun" cx="276" cy="30" r="17" fill="#ffd166" opacity=".95"/>
+          <path d="M0 180 Q160 168 320 180 V196 H0Z" fill="rgba(255,255,255,.28)"/>
+          <use href="#houseArt" filter="url(#ghost)"/>
+          <use href="#houseArt" clip-path="url(#fillClip)"/>
+          <g id="litWin" opacity="0" style="transition:opacity 1s; filter: drop-shadow(0 0 5px #ffb703)"><path d="M96 146V124a12 12 0 0 1 24 0V146Z" fill="#ffd166"/><path d="M200 146V124a12 12 0 0 1 24 0V146Z" fill="#ffd166"/></g>
+          <rect id="fillLine" x="40" y="180" width="280" height="2.5" rx="1.2" fill="#ffd166" opacity="0"/>
+          <path class="p heart" id="hHeart" d="M160 40c-6-8-18-4-16 5 1 6 9 11 16 16 7-5 15-10 16-16 2-9-10-13-16-5z" fill="#ff4f8b"/>
+        </svg>
+        <div class="dream-nums">
+          <div class="dream-pct num" id="dreamPct">0%</div>
+          <div class="dream-saved" id="dreamSaved"></div>
+        </div>
+        <div class="bar" id="dreamBar"></div>
+        <div class="stage" id="stage"></div>
+      </div>
+    </div>
+    <input type="file" id="photoIn" accept="image/*" hidden onchange="pickPhoto(event)">
+    <button type="button" class="btn btn-main" style="margin-bottom:14px; padding:16px;" onclick="openAdd('save')" id="btnAdd"></button>
+    <div class="fam" id="fam"></div>
+    <div class="streak" id="streak"></div>
+    <div class="card tint-mint wall">
+      <h3><span id="wallHead"></span><small id="wallCount"></small></h3>
+      <div id="wall"></div>
+      <button type="button" class="btn btn-soft btn-sm" id="wallMore" hidden onclick="wallAll=!wallAll;renderWall()"></button>
+      <div class="chips" id="chips"></div>
+      <div class="send"><input type="text" id="msgIn" maxlength="200" enterkeyhint="send" onkeydown="if(event.key==='Enter'){event.preventDefault();sendMsg();}"><button type="button" class="btn btn-main" onclick="sendMsg()" id="btnSend"></button></div>
+    </div>
+    <div class="card tint-purple">
+      <h3><span id="roomsHead"></span><small id="roomsCount"></small></h3>
+      <div class="rooms" id="rooms"></div>
+      <p class="hint" id="roomsHint"></p>
+    </div>
+    <div class="card quote-card"><h3><span id="quoteHead"></span><small id="quoteDate"></small></h3><div class="quote" id="quote"></div></div>
+    <div class="card tint-purple">
+      <h3><span id="etaHead"></span></h3>
+      <div class="grid-2">
+        <div class="stat"><small id="lblLeft"></small><b class="num" id="statLeft">-</b></div>
+        <div class="stat"><small id="lblEta"></small><b id="statEta">-</b></div>
+        <div class="stat"><small id="lblMonth"></small><b class="num" id="statMonth">-</b></div>
+        <div class="stat"><small id="lblPace"></small><b class="num" id="statPace">-</b></div>
+      </div>
+      <p class="hint" id="etaHint"></p>
+    </div>
+    <div class="card tint-mint">
+      <h3><span id="monthsHead"></span><small id="monthsSub"></small></h3>
+      <div class="months" id="months"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="card tint-pink"><h3><span id="feedHead"></span><small id="feedCount"></small></h3><div class="feed" id="feed"></div></div>
+    <div class="card"><h3><span id="milesHead"></span><small id="milesCount"></small></h3><div class="miles" id="miles"></div></div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="tab" id="tab-plan">
+    <div class="card tint-mint">
+      <h3><span id="calcHead"></span></h3>
+      <label id="lblYears"></label>
+      <div class="seg" id="yearsSeg" style="margin-bottom:12px;"></div>
+      <div class="row"><span id="lblTeamMonth"></span><b class="num" id="teamMonth">-</b></div>
+      <label style="margin-top:10px;" id="lblSplit"></label>
+      <div class="seg" id="splitSeg" style="margin-bottom:10px;"></div>
+      <div id="perMember"></div>
+      <p class="hint" id="calcHint"></p>
+    </div>
+    <div class="card tint-pink">
+      <h3><span id="aptHead"></span><small id="aptCount"></small></h3>
+      <div id="apts"></div>
+      <button type="button" class="btn btn-main btn-sm" style="margin-top:8px;" onclick="openApt()" id="btnApt"></button>
+      <p class="hint" id="aptHint"></p>
+    </div>
+    <div class="card">
+      <h3><span id="goalHead"></span></h3>
+      <div class="grid-2">
+        <div class="fg"><label for="gMad" id="lblGMad"></label><input type="number" id="gMad" inputmode="decimal" onchange="saveGoal()"></div>
+        <div class="fg"><label for="gExtra" id="lblGExtra"></label><input type="number" id="gExtra" inputmode="decimal" step="0.5" onchange="saveGoal()"></div>
+        <div class="fg"><label for="gCity" id="lblGCity"></label><input type="text" id="gCity" onchange="saveGoal()"></div>
+        <div class="fg"><label for="rUSD">1 $ = ? MAD</label><input type="number" id="rUSD" inputmode="decimal" step="0.01" onchange="saveGoal()"></div>
+        <div class="fg"><label for="rQAR">1 QAR = ? MAD</label><input type="number" id="rQAR" inputmode="decimal" step="0.01" onchange="saveGoal()"></div>
+        <div class="fg"><label for="rEUR">1 € = ? MAD</label><input type="number" id="rEUR" inputmode="decimal" step="0.01" onchange="saveGoal()"></div>
+      </div>
+      <div class="row"><span id="lblGoalTotal"></span><b class="num" id="goalTotal">-</b></div>
+      <p class="hint" id="goalHint"></p>
+    </div>
+    <div class="card">
+      <h3><span id="famHead"></span></h3>
+      <div id="memEdit"></div>
+      <p class="hint" id="famHint"></p>
+    </div>
+    <div class="card">
+      <h3><span id="remHead"></span></h3>
+      <div class="grid-2">
+        <div class="fg"><label for="rDay" id="lblRDay"></label><select id="rDay" onchange="saveRem()"></select></div>
+        <div class="fg"><label for="rTime" id="lblRTime"></label><input type="time" id="rTime" onchange="saveRem()" style="direction:ltr;"></div>
+      </div>
+      <button type="button" class="btn btn-terra" onclick="NATIVE ? togglePay() : exportIcs()" id="btnIcs"></button>
+      <div id="nativeBox" hidden>
+        <button type="button" class="btn btn-terra btn-sm" style="margin-top:8px;" onclick="NATIVE.requestNotif()" id="btnNotif"></button>
+        <button type="button" class="btn btn-soft btn-sm" style="margin-top:8px;" onclick="NATIVE.openBattery()" id="btnBattery"></button>
+        <button type="button" class="btn btn-soft btn-sm" style="margin-top:8px;" onclick="NATIVE.testNotif()" id="btnTest"></button>
+      </div>
+      <p class="hint" id="remHint"></p>
+    </div>
+  </section>
+
+  <!-- ME -->
+  <section class="tab" id="tab-me">
+    <div class="card">
+      <h3><span id="meHead"></span></h3>
+      <label id="lblIam"></label>
+      <div class="seg" id="meSeg" style="margin-bottom:12px;"></div>
+      <label id="lblLang"></label>
+      <div class="seg" style="margin-bottom:12px;"><button type="button" id="lgEn" onclick="setLang('en')">English</button><button type="button" id="lgAr" onclick="setLang('ar')">العربية</button></div>
+      <label id="lblTheme"></label>
+      <div class="seg"><button type="button" id="thAuto" onclick="setTheme('auto')"></button><button type="button" id="thLight" onclick="setTheme('light')"></button><button type="button" id="thDark" onclick="setTheme('dark')"></button></div>
+    </div>
+    <div class="card">
+      <h3><span id="syncHead"></span><small id="syncState"></small></h3>
+      <div id="syncOn" hidden>
+        <div class="row"><span id="lblLastSync"></span><b class="num" id="lastSync">-</b></div>
+        <div class="grid-2" style="margin-top:8px;">
+          <button type="button" class="btn btn-main btn-sm" onclick="syncNow()" id="btnSyncNow"></button>
+          <button type="button" class="btn btn-soft btn-sm" onclick="copyJoin()" id="btnCopy"></button>
+        </div>
+        <textarea id="joinOut" rows="2" readonly style="margin-top:8px; direction:ltr; font-size:12px;"></textarea>
+        <p class="hint" id="syncShareHint"></p>
+        <button type="button" class="btn btn-soft btn-sm" style="margin-top:8px; color:var(--red);" onclick="syncOff()" id="btnSyncOff"></button>
+      </div>
+      <div id="syncOffBox">
+        <p class="hint" style="margin-top:0;" id="syncIntro"></p>
+        <textarea id="joinIn" rows="2" placeholder="DN1|...  /  CB1|..." style="direction:ltr; font-size:13px; margin-top:8px;"></textarea>
+        <button type="button" class="btn btn-main" style="margin-top:8px;" onclick="syncJoin()" id="btnJoin"></button>
+      </div>
+      <p class="hint" id="syncErr" style="color:var(--red);"></p>
+    </div>
+    <div class="card">
+      <h3><span id="bkHead"></span><small id="bkLast"></small></h3>
+      <div class="grid-2">
+        <button type="button" class="btn btn-main btn-sm" onclick="backup()" id="btnBackup"></button>
+        <button type="button" class="btn btn-soft btn-sm" onclick="document.getElementById('impIn').click()" id="btnImport"></button>
+      </div>
+      <input type="file" id="impIn" accept=".json,application/json" hidden onchange="importBackup(event)">
+      <p class="hint" id="bkHint"></p>
+    </div>
+    <div class="card">
+      <h3><span id="sndHead"></span></h3>
+      <label id="lblSnd"></label>
+      <div class="seg" style="margin-bottom:12px;"><button type="button" id="sndOn" onclick="setSound(true)"><span id="sndOnT"></span></button><button type="button" id="sndOff" onclick="setSound(false)"><span id="sndOffT"></span></button></div>
+      <label id="lblVib"></label>
+      <div class="seg" style="margin-bottom:12px;"><button type="button" id="vibOn" onclick="setVib(true)"><span id="vibOnT"></span></button><button type="button" id="vibOff" onclick="setVib(false)"><span id="vibOffT"></span></button></div>
+      <button type="button" class="btn btn-soft btn-sm" onclick="trySound()" id="btnSndTry"></button>
+    </div>
+    <div class="card" id="updCard" hidden>
+      <h3><span id="updHead"></span><small id="updVer"></small></h3>
+      <p class="hint" style="margin-top:0;" id="updState"></p>
+      <button type="button" class="btn btn-soft btn-sm" onclick="pageCheck(true)" id="btnUpdCheck"></button>
+      <button type="button" class="btn btn-main btn-sm" style="margin-top:8px;" onclick="document.getElementById('updFile').click()" id="btnUpdFile"></button>
+      <button type="button" class="btn btn-soft btn-sm" style="margin-top:8px;" onclick="sendCurrentPage()" id="btnUpdSend"></button>
+      <input type="file" id="updFile" accept=".html,text/html" hidden onchange="updateFromFile(event)">
+      <p class="hint" id="updHint"></p>
+    </div>
+    <div class="card" id="installCard"><h3><span id="installHead"></span></h3><p class="hint" id="installHint" style="margin-top:0;"></p></div>
+  </section>
+</div>
+
+<nav>
+  <button type="button" class="on" id="nav-home" onclick="goTab('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5a2 2 0 0 1 4 0v5"/></svg><span id="navHome"></span></button>
+  <button type="button" id="nav-plan" onclick="goTab('plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span id="navPlan"></span></button>
+  <button type="button" id="nav-me" onclick="goTab('me')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="navMe"></span></button>
+</nav>
+
+<div class="who" id="who" hidden><h2 id="whoTitle"></h2><p class="hint" id="whoSub"></p><div class="fam" id="whoFam"></div></div>
+<div class="sheet-bg" id="sheetBg" hidden onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
+<div class="sheet-bg" id="updPop" hidden style="z-index:65; align-items:center;">
+  <div class="sheet" style="border-radius:24px; max-width:420px; margin:16px; text-align:center;">
+    <div style="font-size:52px; line-height:1;">✨</div>
+    <h2 style="justify-content:center;" id="updPopTitle"></h2>
+    <p style="margin-bottom:14px;" id="updPopMsg"></p>
+    <button type="button" class="btn btn-main" onclick="applyPageNow()" id="btnUpdNow"></button>
+    <button type="button" class="btn btn-soft btn-sm" style="margin-top:8px;" onclick="document.getElementById('updPop').hidden=true" id="btnUpdLater"></button>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* ==================== STORAGE ==================== */
+const KEY = "DARNA_STATE_V1", PHOTO_KEY = "DARNA_PHOTO_V1", PREF_KEY = "DARNA_PREFS_V1", SYNC_KEY = "DARNA_SYNC_V1";
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function uid() { return "e" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function n(v) { const x = parseFloat(v); return isFinite(x) ? x : 0; }
+function pad(x) { return String(x).padStart(2, "0"); }
+function ymd(d) { d = d || new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function parseYmd(s) { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, m - 1, d); }
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+let S = null;
+const COLORS = ["#12b39a", "#7b5cff", "#ff6b4a", "#ffb703", "#ff4f8b", "#4b5cff", "#1f9d55", "#c9962e"];
+function freeColor() {
+  const used = new Set((S && S.members ? S.members : []).map(m => m.color));
+  return COLORS.find(c => !used.has(c)) || COLORS[Math.floor(Math.random() * COLORS.length)];
+}
+function defaults() {
+  return {
+    v: 1, city: "", goalMad: 300000, extraPct: 0,
+    rates: { MAD: 1, USD: 9.8, QAR: 2.69, EUR: 10.7 },
+    members: [
+      { id: "kamal", name: "Kamal", ar: "كمال", cur: "MAD", color: "#12b39a", pledge: 0 },
+      { id: "malika", name: "Malika", ar: "مليكة", f: true, cur: "USD", color: "#7b5cff", pledge: 0 },
+      { id: "jazia", name: "Jazia", ar: "جازية", f: true, cur: "QAR", color: "#ff6b4a", pledge: 0 }
+    ],
+    setAt: 0, entries: [], deleted: {}, miles: {}, likes: {}, homes: [], msgs: [], rooms: {}, gone: {}, photoVer: ""
+  };
+}
+function normalize() {
+  const d = defaults();
+  if (!S || typeof S !== "object") S = d;
+  for (const k in d) if (S[k] === undefined) S[k] = d[k];
+  S.rates = Object.assign({}, d.rates, S.rates || {});
+  if (!Array.isArray(S.members) || !S.members.length) S.members = d.members;
+  if (!Array.isArray(S.entries)) S.entries = [];
+  if (!S.deleted || typeof S.deleted !== "object") S.deleted = {};
+  if (!S.miles || typeof S.miles !== "object") S.miles = {};
+  if (!S.likes || typeof S.likes !== "object") S.likes = {};
+  if (!Array.isArray(S.homes)) S.homes = [];
+  if (!Array.isArray(S.msgs)) S.msgs = [];
+  S.members.forEach(function (m) { if (!m.id) m.id = uid(); if (!m.color) m.color = COLORS[0]; if (!m.cur) m.cur = "MAD"; });
+  if (!S.rooms || typeof S.rooms !== "object") S.rooms = {};
+  if (!S.gone || typeof S.gone !== "object") S.gone = {};
+  const OLD = { "#1f8a7a": "#12b39a", "#2346b8": "#7b5cff", "#c4623a": "#ff6b4a" };
+  S.members.forEach(m => { if (OLD[m.color]) m.color = OLD[m.color]; if (m.f === undefined && (m.id === "malika" || m.id === "jazia")) m.f = true; });
+}
+function load() { try { S = JSON.parse(lsGet(KEY) || "null"); } catch (e) { S = null; } normalize(); }
+function writeLocal() { if (!lsSet(KEY, JSON.stringify(S))) toast(t("Storage is full. Make a backup."), true); }
+function save() { writeLocal(); markDirty(); }
+function prefs() { try { return JSON.parse(lsGet(PREF_KEY) || "{}") || {}; } catch (e) { return {}; } }
+function setPref(k, v) { const p = prefs(); p[k] = v; lsSet(PREF_KEY, JSON.stringify(p)); }
+
+/* ==================== LANGUAGE ==================== */
+let LANG = prefs().lang === "ar" ? "ar" : "en";
+const AR = {
+  "Darna": "دارنا", "Home": "البيت", "Plan": "الخطة", "Me": "أنا", "Our home": "بيتنا", "A home in Morocco": "بيت في المغرب", "in {city}": "في {city}",
+  "Add photo": "أضف صورة", "Change photo": "غيّر الصورة", "of": "من",
+  "+ Add my contribution": "+ أضف مساهمتي", "Who are you?": "من أنت؟", "Pick your name. Each phone remembers its owner.": "اختر اسمك، وكل هاتف يتذكر صاحبه.",
+  "share of the home": "من البيت", "this month": "هذا الشهر", "pledged": "التزام",
+  "Today's reminder": "تذكير اليوم", "When do we get there?": "متى نصل؟",
+  "Still needed": "الباقي", "At this pace": "بهذه الوتيرة", "Family, this month": "العائلة هذا الشهر", "Monthly pace": "الوتيرة الشهرية",
+  "Based on the family's savings in the last 3 months.": "محسوب من ادخار العائلة في آخر 3 أشهر.",
+  "Based on everyone's monthly pledge. It updates as you save.": "محسوب من التزام كل واحد الشهري، ويتحدث مع كل مساهمة.",
+  "Reached!": "وصلنا!", "Set monthly pledges in Plan": "حدّدوا الالتزام الشهري لكل واحد في «الخطة» لنحسب موعد الوصول.",
+  "Latest contributions": "آخر المساهمات", "No contributions yet. Be the first!": "لا مساهمات بعد. كن الأول!",
+  "{name} added {x}": "{name} أضاف {x}", "{name} took out {x}": "{name} سحب {x}", "{name} added {x}#f": "{name} أضافت {x}", "{name} took out {x}#f": "{name} سحبت {x}",
+  "Milestones": "المحطات", "Delete": "حذف", "Delete this contribution?": "حذف هذه المساهمة؟",
+  "Savings calculator": "حاسبة الادخار", "We want our home in": "نريد بيتنا خلال", "1 year": "سنة", "2 years": "سنتان", "{n} years": "{n} سنوات",
+  "The family needs per month": "تحتاج العائلة في الشهر", "Split": "التقسيم", "Equal thirds": "بالتساوي", "By pledge": "حسب الالتزام",
+  "per month": "في الشهر", "Pay yourselves first: on payday, move the money before spending.": "ادخروا أولاً: يوم الراتب حوّلوا المبلغ قبل أي مصروف.",
+  "The home": "البيت", "Apartment price (MAD)": "ثمن الشقة (درهم)", "Extra buying costs (%)": "مصاريف الشراء الإضافية (%)", "City": "المدينة",
+  "Total goal": "الهدف كاملاً",
+  "Rates change; update them from your bank or transfer app. Buying costs (notary, registration) add a few percent in Morocco: ask a notary for the exact figure.":
+    "الأسعار تتغير، حدّثوها من البنك أو تطبيق التحويل. مصاريف الشراء (الموثق والتسجيل) تضيف بضعة في المئة في المغرب، اسألوا موثقاً عن الرقم الدقيق.",
+  "The family": "العائلة", "Name": "الاسم", "Currency": "العملة", "Monthly pledge": "الالتزام الشهري",
+  "Each person's share of the apartment follows what they put in. Write it down together before buying, and keep this app's history as proof.":
+    "حصة كل واحد من الشقة تتبع ما وضعه فيها. اكتبوا اتفاقاً بينكم قبل الشراء، واحتفظوا بسجل هذا التطبيق كإثبات.",
+  "Payday reminder": "تذكير يوم الراتب", "Day": "اليوم", "Time": "الساعة", "Add reminder to my calendar": "أضف التذكير لتقويمي",
+  "Your phone's calendar reminds you every week on payday, even when the app is closed.": "يذكّرك تقويم هاتفك كل أسبوع يوم الراتب، حتى والتطبيق مغلق.",
+  "About me": "عنّي", "I am": "أنا", "Language": "اللغة", "Look": "المظهر", "Auto": "تلقائي", "Light": "فاتح", "Dark": "داكن",
+  "Family sync": "مزامنة العائلة", "Synced": "متزامن", "Syncing...": "جارٍ المزامنة...", "Not linked": "غير مربوط", "Offline": "بدون إنترنت", "Sync error": "خطأ في المزامنة",
+  "Last sync": "آخر مزامنة", "Sync now": "مزامنة الآن", "Copy family code": "نسخ رمز العائلة", "Stop sync on this phone": "إيقاف المزامنة في هذا الهاتف",
+  "Send this code only to Malika and Jazia (WhatsApp). Anyone with it can see and change the family fund.": "أرسل هذا الرمز لمليكة وجازية فقط (WhatsApp). من يملكه يستطيع رؤية حصالة العائلة وتعديلها.",
+  "Kamal: paste your Coffee Boost or Baraka code (CB1|… / HB1|…) once to create the family space. Sisters: paste the family code Kamal sends you (DN1|…).":
+    "كمال: الصق رمز Coffee Boost أو Baraka (CB1|… / HB1|…) مرة واحدة لإنشاء مساحة العائلة. الأخوات: الصقن رمز العائلة الذي يرسله كمال (DN1|…).",
+  "Link this phone": "ربط هذا الهاتف", "That code is not right. Copy it in full.": "الرمز غير صحيح، انسخه كاملاً.",
+  "Family space created. Now copy the family code and send it to your sisters.": "أُنشئت مساحة العائلة. انسخ رمز العائلة وأرسله لأخواتك.",
+  "Linked! The family fund is now on this phone.": "تم الربط! حصالة العائلة الآن في هذا الهاتف.",
+  "Could not connect. Check the internet and the code.": "تعذر الاتصال. تأكد من الإنترنت والرمز.",
+  "Stop syncing on this phone? The data stays here.": "إيقاف المزامنة في هذا الهاتف؟ البيانات تبقى فيه.", "Copied.": "تم النسخ.",
+  "Updates from the family arrived.": "وصلت تحديثات من العائلة.",
+  "Backup": "النسخة الاحتياطية", "Save a backup": "حفظ نسخة", "Restore": "استرجاع",
+  "With sync on, the family fund is safe in the cloud. A backup once a month is extra safety.": "مع المزامنة، حصالة العائلة محفوظة في السحابة. نسخة شهرية أمان إضافي.",
+  "Last backup: {d}": "آخر نسخة: {d}", "Never backed up": "لا نسخة بعد",
+  "Install on your phone": "التثبيت على الهاتف",
+  "iPhone: open in Safari, tap Share, then \"Add to Home Screen\". Android: open in Chrome, tap ⋮, then \"Add to Home screen\". Darna then opens like an app and works offline.":
+    "iPhone: افتح في Safari ثم زر المشاركة ثم «إضافة إلى الشاشة الرئيسية». أندرويد: افتح في Chrome ثم ⋮ ثم «إضافة إلى الشاشة الرئيسية». بعدها تفتح دارنا كتطبيق وتعمل بدون إنترنت.",
+  "Add my contribution": "أضف مساهمتي", "Take money out": "سحب من الحصالة", "Amount": "المبلغ", "Date": "التاريخ", "Note (optional)": "ملاحظة (اختياري)", "Who": "من",
+  "Save": "حفظ", "Enter an amount.": "أدخل المبلغ.", "Withdraw instead": "سحب بدلاً من ذلك",
+  "Added {x} to our home. {pct} done!": "أضفت {x} لبيتنا. أنجزنا {pct}!", "Saved.": "تم الحفظ.",
+  "Photo saved.": "تم حفظ الصورة.", "That photo is too big. Try another one.": "الصورة كبيرة، جرّب صورة أخرى.",
+  "Backup saved.": "تم حفظ النسخة.", "Restored.": "تم الاسترجاع.", "That file is not a Darna backup.": "هذا الملف ليس نسخة من دارنا.",
+  "Replace everything with this backup?": "استبدال كل شيء بهذه النسخة؟", "New milestone: {m}!": "محطة جديدة: {m}!", "Storage is full. Make a backup.": "الذاكرة ممتلئة، احفظ نسخة.",
+  "First 10,000 MAD": "أول 10,000 د", "10%": "10%", "Quarter": "الربع", "Halfway home": "نصف الطريق", "Three quarters": "ثلاثة أرباع", "Almost there": "على الباب", "Keys in hand": "المفاتيح بأيدينا", "Everyone in": "الكل ساهم",
+  "Darna: payday": "دارنا: يوم الراتب", "Add this week's contribution to our home.": "أضف مساهمة هذا الأسبوع لبيتنا.",
+  "Calendar file ready. Tap \"Add All\" to add the reminder.": "ملف التقويم جاهز. اضغط «إضافة الكل».",
+  "Good morning": "صباح الخير", "Good afternoon": "مساء الخير", "Good evening": "مساء النور",
+  "Sunday": "الأحد", "Monday": "الإثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس", "Friday": "الجمعة", "Saturday": "السبت",
+  "Share": "شارك", "Our home is {pct} done! {saved} of {goal} saved together. Darna": "بيتنا اكتمل منه {pct}! جمعنا معاً {saved} من {goal}. دارنا",
+  "Month by month": "شهراً بشهر", "last 6 months": "آخر 6 أشهر",
+  "Apartments we like": "الشقق التي تعجبنا", "+ Add an apartment": "+ أضف شقة", "Title": "العنوان", "Price (MAD)": "الثمن (درهم)", "Link (optional)": "الرابط (اختياري)",
+  "e.g. 2 bedrooms, sea view, Martil": "مثلاً: غرفتان، إطلالة على البحر، مرتيل",
+  "We have {pct} of this price": "عندنا {pct} من هذا الثمن", "Added by {name}": "أضافها {name}", "Delete this apartment?": "حذف هذه الشقة؟",
+  "Save apartments you find (Avito, Mubawab, visits) so all three of you can compare them.": "احفظوا الشقق التي تجدونها (Avito وMubawab والزيارات) لتقارنوها أنتم الثلاثة.",
+  "Make this our goal": "اجعلها هدفنا", "Goal updated.": "تم تحديث الهدف.", "Write a title.": "اكتب عنواناً.",
+  "Payday notification: on ✓": "إشعار يوم الراتب: مفعّل ✓", "Payday notification: off": "إشعار يوم الراتب: متوقف",
+  "Payday notification is on.": "تم تفعيل إشعار يوم الراتب.", "Payday notification is off.": "تم إيقاف إشعار يوم الراتب.", "Next one: {d}": "القادم: {d}",
+  "You also get a notification when someone in the family adds money, sends a message, claims a room, finds an apartment or reaches a milestone.": "ويصلك إشعار أيضاً حين يضيف أحد من العائلة مبلغاً، أو يرسل رسالة، أو يختار غرفة، أو يجد شقة، أو تصلون لمحطة جديدة.",
+  "Allow notifications": "اسمح بالإشعارات", "Let Darna check in the background": "اسمح لدارنا بالعمل في الخلفية", "Show a test notification": "أرني إشعاراً تجريبياً",
+  "Backup saved in Downloads/Darna.": "حُفظت النسخة في Downloads/Darna.", "Could not save the file.": "تعذّر حفظ الملف.",
+  "Edit my contribution": "تعديل مساهمتي", "Edit the withdrawal": "تعديل السحب", "Save changes": "حفظ التعديل",
+  "+ Add a family member": "+ أضف فرداً للعائلة", "New member": "فرد جديد", "Remove": "إزالة", "Eight people is the most.": "ثمانية أفراد هو الحد الأقصى.",
+  "Remove {name}?": "إزالة {name}؟",
+  "Their {n} contributions stay in the fund and keep their name. Only the card and the pledge go.": "مساهماتهم ({n}) تبقى في الحصالة باسمهم. تختفي البطاقة والالتزام فقط.",
+  "They have no contributions yet.": "لا مساهمات لهم بعد.", "This is you on this phone: you will be asked who you are again.": "هذا أنت في هذا الهاتف، وسيُسألك التطبيق من أنت من جديد.",
+  "App updates": "تحديث التطبيق", "version {n}": "نسخة {n}", "Check for an update now": "البحث عن تحديث الآن",
+  "Update from a file and send it to the family": "📂 تحديث من ملف وإرساله للعائلة", "Send my version to the family": "📤 أرسل نسخة هاتفي للعائلة",
+  "Updates sent by the family arrive on their own when you open the app. Your data stays as it is.": "التحديثات التي يرسلها أحدكم تصل وحدها عند فتح التطبيق. بياناتكم تبقى كما هي.",
+  "Update now": "حدّث الآن", "Later": "لاحقاً (يتحدث عند الفتح القادم)", "Looking...": "جارٍ البحث...",
+  "You have the newest version ({n}).": "عندك آخر نسخة ({n}).", "A new version is ready ({n}).": "تحديث جديد جاهز ({n}).",
+  "A new version from {name}": "تحديث جديد من {name}", "A new version": "تحديث جديد", "Your data stays as it is.": "بياناتكم تبقى كما هي.",
+  "Could not prepare the update. Ask for it to be sent again.": "تعذّر تجهيز التحديث. اطلب إرساله من جديد.",
+  "Could not look for an update (internet?).": "تعذّر البحث عن تحديث (الإنترنت؟).", "The update is not ready yet.": "التحديث غير جاهز بعد.",
+  "Turn on family sync first.": "فعّل مزامنة العائلة أولاً.", "Could not read your version.": "تعذّر قراءة نسخة هاتفك.", "Sending...": "جارٍ الإرسال...",
+  "Version {n} sent. It reaches the others when they open the app.": "أُرسلت النسخة {n}. تصل للباقين عند فتح التطبيق.",
+  "Could not send. Check the internet.": "تعذّر الإرسال. تأكد من الإنترنت.", "That file is not a Darna update.": "هذا الملف ليس تحديثاً لدارنا.",
+  "That file is not newer than your version ({n}).": "هذا الملف ليس أحدث من نسختك ({n}).", "The file is broken or incomplete.": "الملف ناقص أو تالف.",
+  "Update sent to the family. Yours is updating now...": "أُرسل التحديث للعائلة. يتحدث تطبيقك الآن...",
+  "Could not send it now; yours will update. Send it later.": "تعذّر الإرسال الآن، سيتحدث تطبيقك. أرسله لاحقاً.",
+  "Sound & touch": "الصوت واللمس", "Sound": "الصوت", "Vibration": "الاهتزاز", "On": "مفعّل", "Off": "متوقف", "Hear it": "🔊 جرّب الأصوات",
+  "today": "اليوم", "yesterday": "أمس", "{n} days ago": "قبل {n} أيام"
+};
+Object.assign(AR, {
+  "next at {p}": "التالية عند {p}", "starts with the first contribution": "يبدأ مع أول مساهمة", "New stage: {s}": "مرحلة جديدة: {s}",
+  "{n} months in a row, all three contributed!": "{n} أشهر متتالية ساهم فيها الثلاثة!", "Start a family streak this month": "لنبدأ سلسلة العائلة هذا الشهر",
+  "Everyone is in this month. Bravo!": "الكل ساهم هذا الشهر. برافو!", "Waiting this month for: {names}": "ننتظر هذا الشهر: {names}",
+  "Family messages": "رسائل العائلة", "Send": "إرسال", "Write to your family...": "اكتب لعائلتك...", "Say something nice to your sisters and brother.": "قل كلمة حلوة لإخوتك.",
+  "Show less": "عرض أقل", "Show all ({n})": "عرض الكل ({n})",
+  "Rooms of our home": "غرف بيتنا", "Free to claim": "متاحة", "Each room opens as we save. Claim one to decorate it, and write your wish for it.": "كل غرفة تُفتح كلما ادّخرنا. اختر غرفة لتزيّنها واكتب أمنيتك لها.",
+  "New room unlocked: {r}": "غرفة جديدة فُتحت: {r}", "{r} opens at {p}. Keep saving!": "{r} تُفتح عند {p}. واصلوا!",
+  "{name} will decorate this room.": "{name} سيزيّن هذه الغرفة.", "{name} will decorate this room.#f": "{name} ستزيّن هذه الغرفة.", "Lovely!": "جميل!", "Your wish for this room": "أمنيتك لهذه الغرفة",
+  "e.g. blue zellige and a big sofa": "مثلاً: زليج أزرق وكنبة كبيرة", "I'll decorate this room": "سأزيّن هذه الغرفة", "Leave it to the others": "اتركها للآخرين",
+  "New from family": "جديد العائلة", "Me, this month": "أنا هذا الشهر", "{n} new messages from the family": "{n} رسائل جديدة من العائلة", "Let's go": "هيا بنا"
+});
+function t(s, vars) { let out = LANG === "ar" && AR[s] != null ? AR[s] : s; if (vars) for (const k in vars) out = out.split("{" + k + "}").join(vars[k]); return out; }
+function tf(k, m, vars) { return LANG === "ar" && m && m.f && AR[k + "#f"] ? t(k + "#f", vars) : t(k, vars); }
+function setLang(l) { LANG = l === "ar" ? "ar" : "en"; setPref("lang", LANG); applyLang(); nativeSync(); renderAll(); }
+function toggleLang() { setLang(LANG === "ar" ? "en" : "ar"); }
+function applyLang() { document.documentElement.lang = LANG; document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr"; document.getElementById("langBtn").textContent = LANG === "ar" ? "English" : "العربية"; }
+function mName(m) { return LANG === "ar" && m.ar && m.name === defaults().members.find(x => x.id === m.id)?.name ? m.ar : m.name; }
+function memberOf(id) {
+  const m = S.members.find(x => x.id === id);
+  if (m) return m;
+  const g = (S.gone || {})[id];
+  return g ? { id: id, name: g.name, ar: g.ar, color: g.color, past: true } : { id: id, name: "?", color: "#9a92ad", past: true };
+}
+
+const QUOTES = [
+  ["Three cities, one home.", "ثلاث مدن، وبيت واحد."],
+  ["Fez, New York and Doha are building the same front door.", "فاس ونيويورك والدوحة تبني نفس الباب."],
+  ["Alone it takes years. Together it takes turns.", "وحدك يأخذ سنوات، ومعاً يصير أقرب."],
+  ["Every contribution lights a window of our home.", "كل مساهمة تضيء نافذة من بيتنا."],
+  ["Picture all of us around one table, in our own home.", "تخيّلوا اجتماعنا حول مائدة واحدة، في بيتنا."],
+  ["Small amounts, from three people, every month: that is how homes are bought.", "مبالغ صغيرة من ثلاثة أشخاص كل شهر: هكذا تُشترى البيوت."],
+  ["Pay the home first. Everything else can wait.", "ادفعوا للبيت أولاً، وكل شيء آخر ينتظر."],
+  ["Far from each other today, under one roof tomorrow.", "بعيدون اليوم، وتحت سقف واحد غداً."],
+  ["Our parents would be proud of this.", "والدانا سيفخران بهذا."],
+  ["What you put in today is a wall that will stand for years.", "ما تضعه اليوم جدار يبقى واقفاً سنوات."],
+  ["A family that saves together, stays together.", "العائلة التي تدّخر معاً تبقى معاً."],
+  ["Before a small purchase, ask: is it worth a window of our home?", "قبل أي شراء صغير اسأل: هل يستحق نافذة من بيتنا؟"],
+  ["Slow progress is still progress. Keep going, all three.", "التقدم البطيء يبقى تقدماً. واصلوا، ثلاثتكم."],
+  ["Long shifts end. Our home stays.", "الساعات الطويلة تنتهي، وبيتنا يبقى."],
+  ["One day the keys will have three names on them.", "يوماً ما ستحمل المفاتيح ثلاثة أسماء."],
+  ["The sea, the light, the keys. Hold that picture today.", "البحر والضوء والمفاتيح. احملوا هذه الصورة معكم اليوم."],
+  ["Count what we saved, not what we missed.", "احسبوا ما ادّخرنا، لا ما فاتنا."],
+  ["Payday is home day.", "يوم الراتب هو يوم البيت."],
+  ["Each of us carries a piece. Together it becomes a home.", "كل واحد منا يحمل قطعة، ومعاً تصير بيتاً."],
+  ["Today, add something. Even a little.", "اليوم أضف شيئاً، ولو قليلاً."]
+];
+function quoteOf(d) { d = d || new Date(); const doy = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000); return QUOTES[(doy * 3 + d.getFullYear()) % QUOTES.length][LANG === "ar" ? 1 : 0]; }
+
+/* ==================== LONG LISTS ====================
+   Only the newest few are shown; one button opens the rest. */
+const openList = {};
+function toggleList(key, fn) { openList[key] = !openList[key]; if (typeof window[fn] === "function") window[fn](); }
+function moreBtn(key, total, limit, fn) {
+  if (total <= limit) return "";
+  return '<button type="button" class="more" onclick="event.stopPropagation();toggleList(\'' + key + '\',\'' + fn + '\')">' +
+    (openList[key] ? t("Show less") : t("Show all ({n})", { n: total })) + '</button>';
+}
+
+/* ==================== MONEY ==================== */
+function me() { const id = prefs().me; return S.members.find(m => m.id === id) || null; }
+function viewCur() { const m = me(); return m ? m.cur : "MAD"; }
+function rate(c) { return Math.max(0.0001, n(S.rates[c] || 1)); }
+function toMad(amt, cur) { return n(amt) * rate(cur); }
+function fromMad(v, cur) { return n(v) / rate(cur); }
+const SYM = { USD: "$", EUR: "€" };
+function money(v, cur) {
+  const x = Math.round(n(v)).toLocaleString("en-US");
+  if (cur === "USD" || cur === "EUR") return SYM[cur] + x;
+  if (cur === "QAR") return x + (LANG === "ar" ? " ر.ق" : " QAR");
+  return x + (LANG === "ar" ? " د" : " MAD");
+}
+function inView(mad) { return money(fromMad(mad, viewCur()), viewCur()); }
+function goalMad() { return n(S.goalMad) * (1 + n(S.extraPct) / 100); }
+function live() { return S.entries.filter(e => !S.deleted[e.id]); }
+function eMad(e) { return (e.type === "withdraw" ? -1 : 1) * toMad(e.amt, e.cur); }
+function totalMad() { return Math.max(0, live().reduce((a, e) => a + eMad(e), 0)); }
+function memberMad(id) { return live().filter(e => e.by === id).reduce((a, e) => a + eMad(e), 0); }
+function monthMad(id, mk) { mk = mk || ymd().slice(0, 7); return live().filter(e => e.d.slice(0, 7) === mk && (!id || e.by === id)).reduce((a, e) => a + eMad(e), 0); }
+function pledgeMad() { return S.members.reduce((a, m) => a + toMad(m.pledge, m.cur), 0); }
+function pace() {
+  const L = live(); if (!L.length) return { val: pledgeMad(), real: false };
+  const first = L.map(e => e.d).sort()[0], now = new Date(), from = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+  if ((now - parseYmd(first)) < 45 * 86400000) return { val: pledgeMad(), real: false };
+  const start = parseYmd(first) > from ? parseYmd(first) : from, months = Math.max(1, (now - start) / (30.44 * 86400000));
+  return { val: Math.max(0, L.filter(e => parseYmd(e.d) >= from).reduce((a, e) => a + eMad(e), 0) / months), real: true };
+}
+function monthName(d) { return d.toLocaleDateString(LANG === "ar" ? "ar-MA" : "en-US", { month: "long", year: "numeric" }); }
+function shortDate(s) { return parseYmd(s).toLocaleDateString(LANG === "ar" ? "ar-MA" : "en-US", { month: "short", day: "numeric" }); }
+function ago(s) { const d = Math.round((parseYmd(ymd()) - parseYmd(s)) / 86400000); return d <= 0 ? t("today") : d === 1 ? t("yesterday") : d < 8 ? t("{n} days ago", { n: d }) : shortDate(s); }
+
+const MILES = [
+  { id: "k10", label: "First 10,000 MAD", test: (s, g) => s >= 10000 },
+  { id: "all", label: "Everyone in", test: () => S.members.every(m => memberMad(m.id) > 0) },
+  { id: "p10", label: "10%", test: (s, g) => s >= g * .1 },
+  { id: "p25", label: "Quarter", test: (s, g) => s >= g * .25 },
+  { id: "p50", label: "Halfway home", test: (s, g) => s >= g * .5 },
+  { id: "p75", label: "Three quarters", test: (s, g) => s >= g * .75 },
+  { id: "p90", label: "Almost there", test: (s, g) => s >= g * .9 },
+  { id: "p100", label: "Keys in hand", test: (s, g) => s >= g }
+];
+
+/* ==================== RENDER ==================== */
+let curTab = "home";
+function goTab(x) {
+  if (x !== curTab) tap("nav", 8);
+  curTab = x;
+  ["home", "plan", "me"].forEach(k => { document.getElementById("tab-" + k).classList.toggle("on", k === x); document.getElementById("nav-" + k).classList.toggle("on", k === x); });
+  window.scrollTo(0, 0); renderAll();
+}
+function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+function initial(m) { return (mName(m) || "?").trim().charAt(0).toUpperCase(); }
+function renderAll() {
+  setText("brandName", t("Darna"));
+  const h = new Date().getHours(), m = me();
+  setText("brandSub", m ? t(h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening") + (LANG === "ar" ? " يا " : ", ") + mName(m) : S.members.map(mName).join(" · "));
+  setText("navHome", t("Home")); setText("navPlan", t("Plan")); setText("navMe", t("Me"));
+  renderSyncDot();
+  if (curTab === "home") renderHome();
+  if (curTab === "plan") renderPlan();
+  if (curTab === "me") renderMe();
+  renderWho();
+}
+function renderHome() {
+  const m = me(), g = goalMad(), s = totalMad(), pct = g > 0 ? Math.min(100, s / g * 100) : 0;
+  setText("dreamTitle", t("Our home"));
+  setText("dreamCity", S.city ? t("in {city}", { city: S.city }) : t("A home in Morocco"));
+  const photo = lsGet(PHOTO_KEY);
+  document.getElementById("dreamPhoto").style.backgroundImage = photo ? 'url("' + photo + '")' : "";
+  document.getElementById("dream").classList.toggle("nophoto", !photo);
+  setText("shareBtn", t("Share"));
+  setText("photoBtn", photo ? t("Change photo") : t("Add photo"));
+  setText("dreamPct", (pct < 10 ? pct.toFixed(1) : Math.floor(pct)) + "%");
+  const vc = viewCur();
+  document.getElementById("dreamSaved").innerHTML = '<b class="num"><bdi>' + inView(s) + '</bdi></b>' + (vc !== "MAD" ? '<br><span class="num"><bdi>' + money(s, "MAD") + '</bdi></span>' : '') +
+    '<br><span style="opacity:.8">' + t("of") + ' <bdi>' + inView(g) + '</bdi></span>';
+  document.getElementById("dreamBar").innerHTML = g > 0 ? S.members.map(mm => { const w = Math.max(0, memberMad(mm.id)) / g * 100; return w > 0 ? '<i style="width:' + Math.min(100, w) + '%; background:' + mm.color + ';"></i>' : ''; }).join("") : "";
+  renderHouse(pct);
+  setText("btnAdd", t("+ Add my contribution"));
+  // siblings
+  const mk = ymd().slice(0, 7);
+  document.getElementById("fam").innerHTML = S.members.map(mm => {
+    const tot = memberMad(mm.id), sh = g > 0 ? Math.max(0, tot) / g * 100 : 0, mo = monthMad(mm.id, mk), pl = toMad(mm.pledge, mm.cur);
+    return '<div class="mem' + (m && m.id === mm.id ? " me" : "") + '" style="--mc:' + mm.color + '"><div class="av">' + esc(initial(mm)) + '</div><div class="nm">' + esc(mName(mm)) + '</div>' +
+      '<div class="amt num"><bdi>' + money(fromMad(tot, mm.cur), mm.cur) + '</bdi></div>' +
+      '<div class="sub">' + sh.toFixed(1) + '% ' + t("share of the home") + '</div>' +
+      '<div class="sub">' + t("this month") + '<br><bdi class="num">' + (pl > 0 ? shortMoney(fromMad(mo, mm.cur), mm.cur) + ' / ' + money(mm.pledge, mm.cur) : money(fromMad(mo, mm.cur), mm.cur)) + '</bdi></div>' +
+      (pl > 0 ? '<div class="pl"><i style="width:' + Math.min(100, Math.max(0, mo) / pl * 100) + '%"></i></div>' : '') + (mo > 0 ? '<span class="done" aria-label="ok">✓</span>' : '') + '</div>';
+  }).join("");
+  renderStreak(); renderWall(); renderRooms(pct);
+  setText("quoteHead", t("Today's reminder")); setText("quoteDate", shortDate(ymd())); setText("quote", quoteOf());
+  setText("etaHead", t("When do we get there?"));
+  setText("lblLeft", t("Still needed")); setText("lblEta", t("At this pace")); setText("lblMonth", t("Family, this month")); setText("lblPace", t("Monthly pace"));
+  const left = Math.max(0, g - s), p = pace();
+  setText("statLeft", inView(left)); setText("statMonth", inView(monthMad(null, mk))); setText("statPace", inView(p.val));
+  if (left <= 0) setText("statEta", t("Reached!"));
+  else if (p.val <= 0) setText("statEta", "—");
+  else { const months = Math.ceil(left / p.val), end = new Date(); end.setMonth(end.getMonth() + months); setText("statEta", monthName(end)); }
+  setText("etaHint", p.val <= 0 && left > 0 ? t("Set monthly pledges in Plan") : t(p.real ? "Based on the family's savings in the last 3 months." : "Based on everyone's monthly pledge. It updates as you save."));
+  // feed
+  setText("feedHead", t("Latest contributions"));
+  const L = live().slice().sort((a, b) => (a.d + (a.ts || 0) < b.d + (b.ts || 0) ? 1 : -1));
+  setText("feedCount", String(L.length));
+  const FEED_LIM = 6, feedLim = openList.feed ? L.length : FEED_LIM;
+  document.getElementById("feed").innerHTML = L.slice(0, feedLim).map(e => {
+    const mm = memberOf(e.by), wd = e.type === "withdraw";
+    const mine = m && m.id === e.by;
+    return '<div class="item' + (mine ? " tapme" : "") + '" style="--mc:' + mm.color + '"' + (mine ? ' onclick="openEdit(\'' + e.id + '\')"' : '') + '><div class="dot">' + esc(initial(mm)) + '</div><div class="txt">' +
+      tf(wd ? "{name} took out {x}" : "{name} added {x}", mm, { name: esc(mName(mm)), x: '<bdi class="' + (wd ? "neg" : "pos") + '">' + money(e.amt, e.cur) + '</bdi>' }) +
+      (e.note ? '<div class="when">' + esc(e.note) + '</div>' : '') + '<div class="when">' + ago(e.d) + '</div></div>' +
+      heartBtn(e, m) + (mine ? '<button type="button" class="x" onclick="event.stopPropagation();askDelete(\'' + e.id + '\')">' + t("Delete") + '</button>' : '') + '</div>';
+  }).join("") + moreBtn("feed", L.length, FEED_LIM, "renderHome") || '<p class="hint" style="margin:0;">' + t("No contributions yet. Be the first!") + '</p>';
+  renderMonths();
+  // milestones
+  setText("milesHead", t("Milestones")); setText("milesCount", MILES.filter(x => S.miles[x.id]).length + "/" + MILES.length);
+  document.getElementById("miles").innerHTML = MILES.map(x => {
+    const ok = !!S.miles[x.id];
+    return '<div class="mile' + (ok ? " got" : "") + '"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 15l10-8 10 8v11H6z" fill="' + (ok ? "var(--gold)" : "none") + '" stroke="' + (ok ? "var(--terra)" : "var(--muted)") + '" stroke-width="2" stroke-linejoin="round"/><path d="M13 26v-6a3 3 0 0 1 6 0v6" fill="none" stroke="' + (ok ? "var(--terra)" : "var(--muted)") + '" stroke-width="2"/></svg>' + t(x.label) + '</div>';
+  }).join("");
+}
+
+function heartBtn(e, m) {
+  const L = S.likes[e.id] || {}, who = S.members.filter(x => L[x.id]), mine = m && L[m.id], canLike = m && m.id !== e.by;
+  if (!who.length && !canLike) return "";
+  return '<button type="button" class="heart' + (mine ? " on" : "") + '"' + (canLike && !mine ? ' onclick="likeEntry(\'' + e.id + '\')"' : '') + ' title="' + esc(who.map(mName).join(", ")) + '">❤ ' + (who.length || "") + '</button>';
+}
+function likeEntry(id) { const m = me(); if (!m) return; S.likes[id] = Object.assign(S.likes[id] || {}, { [m.id]: Date.now() }); save(); tap("heart", 14); renderHome(); }
+function renderMonths() {
+  setText("monthsHead", t("Month by month")); setText("monthsSub", t("last 6 months"));
+  const now = new Date(), cols = [];
+  for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); cols.push({ d, mk: d.getFullYear() + "-" + pad(d.getMonth() + 1) }); }
+  const per = cols.map(c => S.members.map(mm => Math.max(0, monthMad(mm.id, c.mk))));
+  const max = Math.max(1, ...per.map(a => a.reduce((x, y) => x + y, 0)));
+  document.getElementById("months").innerHTML = cols.map((c, i) => {
+    const tot = per[i].reduce((x, y) => x + y, 0);
+    return '<div class="mcol"><b class="num">' + (tot > 0 ? esc(shortMoney(fromMad(tot, viewCur()), viewCur())) : "") + '</b><div class="mstack" style="height:' + Math.max(4, tot / max * 100) + '%">' +
+      S.members.map((mm, j) => per[i][j] > 0 ? '<i style="background:' + mm.color + '; height:' + (per[i][j] / tot * 100) + '%"></i>' : '').join("") + '</div><small>' +
+      c.d.toLocaleDateString(LANG === "ar" ? "ar-MA" : "en-US", { month: "short" }) + '</small></div>';
+  }).join("");
+  document.getElementById("legend").innerHTML = S.members.map(mm => '<span style="--mc:' + mm.color + '">' + esc(mName(mm)) + '</span>').join("");
+}
+function shortMoney(v, cur) { const k = Math.abs(v) >= 1000 ? (Math.round(v / 100) / 10) + "k" : String(Math.round(v)); return cur === "USD" ? "$" + k : cur === "EUR" ? "€" + k : k; }
+function shareProgress() {
+  const g = goalMad(), s = totalMad(), pct = (g > 0 ? Math.min(100, s / g * 100) : 0).toFixed(1) + "%";
+  const text = t("Our home is {pct} done! {saved} of {goal} saved together. Darna", { pct, saved: inView(s), goal: inView(g) }) + " 🏡";
+  if (NATIVE) { NATIVE.shareText(text); return; }
+  if (navigator.share) { navigator.share({ text }).catch(() => {}); return; }
+  try { navigator.clipboard.writeText(text).then(() => toast(t("Copied.")), () => toast(text)); } catch (e) { toast(text); }
+}
+/* apartments the family likes */
+function renderApts() {
+  setText("aptHead", t("Apartments we like")); setText("btnApt", t("+ Add an apartment"));
+  setText("aptHint", t("Save apartments you find (Avito, Mubawab, visits) so all three of you can compare them."));
+  const H = S.homes.filter(h => !S.deleted[h.id]), s = totalMad(), m = me();
+  setText("aptCount", H.length ? String(H.length) : "");
+  const APT_LIM = 3, aptLim = openList.apt ? H.length : APT_LIM;
+  document.getElementById("apts").innerHTML = H.slice(0, aptLim).map(h => {
+    const by = memberOf(h.by), price = n(h.price), pct = price > 0 ? Math.min(100, s / (price * (1 + n(S.extraPct) / 100)) * 100) : 0;
+    const safeLink = /^https?:\/\//i.test(h.link || "") ? h.link : "";
+    return '<div class="apt"><div class="ic">⌂</div><div class="bd"><div class="tt">' + esc(h.title) + '</div>' +
+      (price > 0 ? '<div class="num" style="font-weight:900;"><bdi>' + money(price, "MAD") + '</bdi>' + (viewCur() !== "MAD" ? ' · <bdi>' + money(fromMad(price, viewCur()), viewCur()) + '</bdi>' : '') + '</div>' +
+        '<div class="bar" style="margin:6px 0 4px;"><i class="one" style="width:' + pct + '%"></i></div><div class="hint" style="margin:0;">' + t("We have {pct} of this price", { pct: pct.toFixed(1) + "%" }) + '</div>' : '') +
+      (h.note ? '<div class="hint" style="margin-top:2px;">' + esc(h.note) + '</div>' : '') +
+      (safeLink ? '<a href="' + esc(safeLink) + '" target="_blank" rel="noopener">' + esc(safeLink.replace(/^https?:\/\/(www\.)?/i, "").slice(0, 40)) + '</a>' : '') +
+      '<div class="hint" style="margin-top:2px;">' + t("Added by {name}", { name: esc(by ? mName(by) : "?") }) + '</div>' +
+      '<div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">' + (price > 0 && Math.round(price) !== Math.round(n(S.goalMad)) ? '<button type="button" class="x" onclick="aptGoal(\'' + h.id + '\')">' + t("Make this our goal") + '</button>' : '') +
+      (m && m.id === h.by ? '<button type="button" class="x" onclick="askDelApt(\'' + h.id + '\')">' + t("Delete") + '</button>' : '') + '</div></div></div>';
+  }).join("") + moreBtn("apt", H.length, APT_LIM, "renderPlan");
+}
+function openApt() {
+  if (!me()) { renderWho(); return; }
+  document.getElementById("sheet").innerHTML = '<h2><span>' + t("+ Add an apartment") + '</span><button type="button" class="x" onclick="closeSheet()" aria-label="close">✕</button></h2>' +
+    '<div class="fg"><label for="hT">' + t("Title") + '</label><input type="text" id="hT" placeholder="' + esc(t("e.g. 2 bedrooms, sea view, Martil")) + '"></div>' +
+    '<div class="grid-2"><div class="fg"><label for="hP">' + t("Price (MAD)") + '</label><input type="number" inputmode="decimal" id="hP"></div><div class="fg"><label for="hC">' + t("City") + '</label><input type="text" id="hC"></div></div>' +
+    '<div class="fg"><label for="hL">' + t("Link (optional)") + '</label><input type="url" id="hL" style="direction:ltr;" placeholder="https://"></div>' +
+    '<div class="fg"><label for="hN">' + t("Note (optional)") + '</label><input type="text" id="hN"></div>' +
+    '<button type="button" class="btn btn-main" onclick="saveApt()">' + t("Save") + '</button>';
+  document.getElementById("sheetBg").hidden = false;
+}
+function saveApt() {
+  const title = document.getElementById("hT").value.trim(); if (!title) { toast(t("Write a title."), true); return; }
+  const city = document.getElementById("hC").value.trim();
+  S.homes.push({ id: uid(), title: city ? title + " · " + city : title, price: Math.max(0, n(document.getElementById("hP").value)), link: document.getElementById("hL").value.trim(), note: document.getElementById("hN").value.trim(), by: me().id, ts: Date.now() });
+  save(); closeSheet(); toast(t("Saved.")); renderPlan();
+}
+function askDelApt(id) {
+  document.getElementById("sheet").innerHTML = '<h2><span>' + t("Delete this apartment?") + '</span></h2><div class="grid-2"><button type="button" class="btn btn-terra" onclick="delApt(\'' + id + '\')">' + t("Delete") + '</button><button type="button" class="btn btn-soft" onclick="closeSheet()">✕</button></div>';
+  document.getElementById("sheetBg").hidden = false;
+}
+function delApt(id) { S.deleted[id] = Date.now(); S.homes = S.homes.filter(h => h.id !== id); save(); closeSheet(); renderPlan(); }
+function aptGoal(id) { const h = S.homes.find(x => x.id === id); if (!h) return; S.goalMad = n(h.price); S.setAt = Date.now(); save(); checkMiles(); toast(t("Goal updated.")); renderAll(); }
+
+let planYears = 3, splitMode = "equal";
+function renderPlan() {
+  const sv = (id, v) => { const el = document.getElementById(id); if (document.activeElement !== el) el.value = v; };
+  renderApts();
+  setText("calcHead", t("Savings calculator")); setText("lblYears", t("We want our home in"));
+  document.getElementById("yearsSeg").innerHTML = [1, 2, 3, 4, 5].map(y => '<button type="button" class="' + (y === planYears ? "on" : "") + '" onclick="planYears=' + y + ';renderPlan()">' + (y === 1 ? t("1 year") : y === 2 ? t("2 years") : t("{n} years", { n: y })) + '</button>').join("");
+  const left = Math.max(0, goalMad() - totalMad()), perMonth = left / (planYears * 12);
+  setText("lblTeamMonth", t("The family needs per month")); setText("teamMonth", inView(perMonth));
+  setText("lblSplit", t("Split"));
+  document.getElementById("splitSeg").innerHTML = [["equal", "Equal thirds"], ["pledge", "By pledge"]].map(([k, l]) => '<button type="button" class="' + (k === splitMode ? "on" : "") + '" onclick="splitMode=\'' + k + '\';renderPlan()">' + t(l) + '</button>').join("");
+  const pl = pledgeMad();
+  document.getElementById("perMember").innerHTML = S.members.map(mm => {
+    const part = splitMode === "pledge" && pl > 0 ? toMad(mm.pledge, mm.cur) / pl : 1 / S.members.length;
+    return '<div class="row" style="--mc:' + mm.color + '"><span style="display:flex; align-items:center; gap:8px;"><span class="av" style="width:28px; height:28px; font-size:13px; margin:0;">' + esc(initial(mm)) + '</span>' + esc(mName(mm)) + '</span><b class="num"><bdi>' + money(fromMad(perMonth * part, mm.cur), mm.cur) + '</bdi> <span class="hint">' + t("per month") + '</span></b></div>';
+  }).join("");
+  setText("calcHint", t("Pay yourselves first: on payday, move the money before spending."));
+  setText("goalHead", t("The home")); setText("lblGMad", t("Apartment price (MAD)")); setText("lblGExtra", t("Extra buying costs (%)")); setText("lblGCity", t("City"));
+  sv("gMad", S.goalMad); sv("gExtra", S.extraPct); sv("gCity", S.city); sv("rUSD", S.rates.USD); sv("rQAR", S.rates.QAR); sv("rEUR", S.rates.EUR);
+  document.getElementById("gCity").placeholder = LANG === "ar" ? "مثلاً: طنجة، أكادير، فاس" : "e.g. Tangier, Agadir, Fez";
+  setText("lblGoalTotal", t("Total goal")); setText("goalTotal", money(goalMad(), "MAD") + " · " + money(fromMad(goalMad(), "USD"), "USD"));
+  setText("goalHint", t("Rates change; update them from your bank or transfer app. Buying costs (notary, registration) add a few percent in Morocco: ask a notary for the exact figure."));
+  setText("famHead", t("The family"));
+  document.getElementById("memEdit").innerHTML = S.members.map((mm, i) =>
+    '<div class="mrow">' +
+    '<div><label>' + t("Name") + '</label><input type="text" value="' + esc(mm.name) + '" onchange="editMember(' + i + ',\'name\',this.value)" style="border-color:' + mm.color + ';"></div>' +
+    '<div><label>' + t("Currency") + '</label><select dir="ltr" style="text-align:center;" onchange="editMember(' + i + ',\'cur\',this.value)">' + ["MAD", "USD", "QAR", "EUR"].map(c => '<option' + (c === mm.cur ? " selected" : "") + '>' + c + '</option>').join("") + '</select></div>' +
+    '<div><label>' + t("Monthly pledge") + '</label><input type="number" inputmode="decimal" value="' + (mm.pledge || "") + '" placeholder="0" onchange="editMember(' + i + ',\'pledge\',this.value)"></div>' +
+    (S.members.length > 1 ? '<button type="button" class="del" title="' + esc(t("Remove")) + '" onclick="askRemoveMember(\'' + mm.id + '\')">✕</button>' : '<span></span>') + '</div>').join("") +
+    '<button type="button" class="btn btn-soft btn-sm" onclick="addMember()" id="btnAddMem">' + t("+ Add a family member") + '</button>';
+  setText("famHint", t("Each person's share of the apartment follows what they put in. Write it down together before buying, and keep this app's history as proof."));
+  setText("remHead", t("Payday reminder")); setText("lblRDay", t("Day")); setText("lblRTime", t("Time"));
+  const P = prefs(), days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  document.getElementById("rDay").innerHTML = days.map((d, i) => '<option value="' + i + '"' + (i === n(P.remDay == null ? 5 : P.remDay) ? " selected" : "") + '>' + t(d) + '</option>').join("");
+  sv("rTime", P.remTime || "19:00");
+  const nat = document.getElementById("nativeBox"); nat.hidden = !NATIVE;
+  if (NATIVE) {
+    const st = nStatus(), on = P.payOn !== false;
+    setText("btnIcs", on ? t("Payday notification: on ✓") : t("Payday notification: off"));
+    document.getElementById("btnIcs").className = "btn " + (on ? "btn-main" : "btn-soft");
+    setText("remHint", on && st.nextPay ? t("Next one: {d}", { d: new Date(st.nextPay).toLocaleString(LANG === "ar" ? "ar-MA" : "en-US", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) }) + " · " + t("You also get a notification when someone in the family adds money, sends a message, claims a room, finds an apartment or reaches a milestone.") : t("You also get a notification when someone in the family adds money, sends a message, claims a room, finds an apartment or reaches a milestone."));
+    document.getElementById("btnNotif").hidden = !!st.notif; setText("btnNotif", t("Allow notifications"));
+    document.getElementById("btnBattery").hidden = !!st.battery; setText("btnBattery", t("Let Darna check in the background"));
+    setText("btnTest", t("Show a test notification"));
+  } else { setText("btnIcs", t("Add reminder to my calendar")); setText("remHint", t("Your phone's calendar reminds you every week on payday, even when the app is closed.")); }
+}
+function saveGoal() {
+  S.goalMad = Math.max(0, n(document.getElementById("gMad").value)); S.extraPct = Math.max(0, n(document.getElementById("gExtra").value));
+  S.city = document.getElementById("gCity").value.trim();
+  ["USD", "QAR", "EUR"].forEach(c => { const v = n(document.getElementById("r" + c).value); if (v > 0) S.rates[c] = v; });
+  S.setAt = Date.now(); save(); renderPlan();
+}
+function addMember() {
+  if (S.members.length >= 8) { toast(t("Eight people is the most.")); return; }
+  S.members.push({ id: uid(), name: t("New member"), cur: "MAD", color: freeColor(), pledge: 0 });
+  S.setAt = Date.now(); save(); renderPlan();
+  setTimeout(() => { const ins = document.querySelectorAll("#memEdit input[type=text]"); const last = ins[ins.length - 1]; if (last) { last.focus(); last.select(); } }, 60);
+}
+function askRemoveMember(id) {
+  const mm = S.members.find(x => x.id === id); if (!mm) return;
+  const nEntries = live().filter(e => e.by === id).length, mine = me() && me().id === id;
+  document.getElementById("sheet").innerHTML = '<h2><span>' + t("Remove {name}?", { name: esc(mName(mm)) }) + '</span></h2>' +
+    '<p class="hint" style="margin-top:0;">' + (nEntries
+      ? t("Their {n} contributions stay in the fund and keep their name. Only the card and the pledge go.", { n: nEntries })
+      : t("They have no contributions yet.")) + (mine ? '<br>' + t("This is you on this phone: you will be asked who you are again.") : '') + '</p>' +
+    '<div class="grid-2" style="margin-top:12px;"><button type="button" class="btn btn-terra" onclick="removeMember(\'' + id + '\')">' + t("Remove") + '</button>' +
+    '<button type="button" class="btn btn-soft" onclick="closeSheet()">✕</button></div>';
+  document.getElementById("sheetBg").hidden = false;
+}
+function removeMember(id) {
+  const mm = S.members.find(x => x.id === id);
+  if (mm) S.gone = Object.assign({}, S.gone, { [id]: { name: mm.name, ar: mm.ar || "", color: mm.color } });
+  S.members = S.members.filter(x => x.id !== id);
+  for (const k in S.rooms) if (S.rooms[k] && S.rooms[k].by === id) S.rooms[k] = { by: "", wish: "", at: Date.now() };
+  S.setAt = Date.now(); save(); closeSheet();
+  if (prefs().me === id) { setPref("me", ""); }
+  renderAll();
+}
+function editMember(i, f, v) {
+  const mm = S.members[i]; if (!mm) return;
+  if (f === "pledge") mm.pledge = Math.max(0, n(v)); else if (f === "name") mm.name = String(v).trim() || mm.name; else mm[f] = v;
+  S.setAt = Date.now(); save(); renderAll();
+}
+function saveRem() { setPref("remDay", n(document.getElementById("rDay").value)); setPref("remTime", document.getElementById("rTime").value || "19:00"); nativeSync(); if (NATIVE) renderPlan(); }
+function renderMe() {
+  setText("meHead", t("About me")); setText("lblIam", t("I am")); setText("lblLang", t("Language")); setText("lblTheme", t("Look"));
+  const m = me();
+  document.getElementById("meSeg").innerHTML = S.members.map(mm => '<button type="button" class="' + (m && m.id === mm.id ? "on" : "") + '" onclick="setMe(\'' + mm.id + '\')">' + esc(mName(mm)) + '</button>').join("");
+  document.getElementById("lgEn").className = LANG === "en" ? "on" : ""; document.getElementById("lgAr").className = LANG === "ar" ? "on" : "";
+  const th = prefs().theme || "auto";
+  setText("thAuto", t("Auto")); setText("thLight", t("Light")); setText("thDark", t("Dark"));
+  ["Auto", "Light", "Dark"].forEach(k => document.getElementById("th" + k).className = th === k.toLowerCase() ? "on" : "");
+  renderSync(); renderUpd(); renderSound();
+  setText("bkHead", t("Backup")); const lb = prefs().lastBackup; setText("bkLast", lb ? t("Last backup: {d}", { d: shortDate(lb) }) : t("Never backed up"));
+  setText("btnBackup", t("Save a backup")); setText("btnImport", t("Restore")); setText("bkHint", t("With sync on, the family fund is safe in the cloud. A backup once a month is extra safety."));
+  document.getElementById("installCard").hidden = !!NATIVE;
+  setText("installHead", t("Install on your phone"));
+  setText("installHint", t("iPhone: open in Safari, tap Share, then \"Add to Home Screen\". Android: open in Chrome, tap ⋮, then \"Add to Home screen\". Darna then opens like an app and works offline."));
+}
+function setMe(id) { unlockAudio(); tap("open", 15); setPref("me", id); nativeSync(); renderAll(); setTimeout(maybeDaily, 400); }
+function renderWho() {
+  const show = !me(); document.getElementById("who").hidden = !show; if (!show) return;
+  setText("whoTitle", t("Who are you?")); setText("whoSub", t("Pick your name. Each phone remembers its owner."));
+  document.getElementById("whoFam").innerHTML = S.members.map(mm => '<div class="mem" style="--mc:' + mm.color + '" onclick="setMe(\'' + mm.id + '\')"><div class="av">' + esc(initial(mm)) + '</div><div class="nm">' + esc(mName(mm)) + '</div><div class="sub">' + mm.cur + '</div></div>').join("");
+}
+function setTheme(v) { setPref("theme", v); applyTheme(); renderMe(); }
+function applyTheme() { const v = prefs().theme || "auto"; if (v === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", v); }
+
+
+/* ==================== THE HOUSE THAT BUILDS ITSELF ==================== */
+const STAGES = [
+  { at: 0, en: "Our home is waiting for us", ar: "بيتنا ينتظرنا", ic: "🌱" },
+  { at: 0.01, en: "Laying the foundation", ar: "نضع الأساس", ic: "🧱" },
+  { at: 7, en: "The walls are rising", ar: "الجدران ترتفع", ic: "🏗️" },
+  { at: 24, en: "Windows going in", ar: "النوافذ تُركّب", ic: "🪟" },
+  { at: 42, en: "Our door is up", ar: "بابنا رُكّب", ic: "🚪" },
+  { at: 61, en: "Zellige on the walls", ar: "الزليج على الجدران", ic: "✨" },
+  { at: 71, en: "The roof is going on", ar: "السطح يُبنى", ic: "🏠" },
+  { at: 90, en: "Last touches", ar: "اللمسات الأخيرة", ic: "🌴" },
+  { at: 100, en: "Welcome home!", ar: "مرحباً بكم في بيتكم!", ic: "🔑" }
+];
+/* every contribution is seen on the house: it glows and the amount floats up */
+function houseBurst(text) {
+  buzz(18);
+  const box = document.querySelector(".dream-in"), h = document.getElementById("house"); if (!box) return;
+  const b = document.createElement("div"); b.className = "burst"; b.textContent = text; box.appendChild(b); setTimeout(() => b.remove(), 2300);
+  h.classList.remove("flash"); void h.getBoundingClientRect(); h.classList.add("flash");
+}
+function stageOf(pct) { let i = 0; STAGES.forEach((st, k) => { if (pct >= st.at) i = k; }); return i; }
+let houseShown = null, houseAnim = 0;
+function renderHouse(pct) {
+  // the whole home is always there as a see-through ghost; colour fills it from the ground up as we save
+  const TOP = 40, BOT = 180, target = Math.max(0, Math.min(100, pct));
+  const draw = v => {
+    const h = v <= 0 ? 0 : Math.max(2.5, (BOT - TOP) * v / 100), y = BOT - h;
+    const r = document.getElementById("fillRect"); r.setAttribute("y", y.toFixed(2)); r.setAttribute("height", h.toFixed(2));
+    const ln = document.getElementById("fillLine"); ln.setAttribute("y", (y - 1.2).toFixed(2)); ln.setAttribute("opacity", v > 0 && v < 100 ? ".95" : "0");
+  };
+  const from = houseShown == null ? Math.max(0, target - 8) : houseShown;
+  cancelAnimationFrame(houseAnim);
+  if (Math.abs(target - from) < 0.01 || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) draw(target);
+  else { const t0 = performance.now(), dur = 1400; const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); draw(from + (target - from) * e); if (k < 1) houseAnim = requestAnimationFrame(step); }; houseAnim = requestAnimationFrame(step); }
+  houseShown = target;
+  document.getElementById("hHeart").classList.toggle("on", pct >= 100);
+  document.getElementById("litWin").setAttribute("opacity", pct >= 90 ? "1" : "0");
+  const si = stageOf(pct), st = STAGES[si], nx = STAGES[si + 1];
+  document.getElementById("stage").innerHTML = st.ic + " " + esc(LANG === "ar" ? st.ar : st.en) + (nx && st.at > 0 ? ' <span style="opacity:.75">· ' + esc(t("next at {p}", { p: nx.at + "%" })) + '</span>' : "");
+  // a new stage reached since this phone last looked: celebrate once
+  const P = prefs(), last = P.stage;
+  if (last == null) setPref("stage", si);
+  else if (si > last) { setPref("stage", si); setTimeout(() => { play("stage"); buzz([0, 40, 60, 40]); confetti(70); toast(t("New stage: {s}", { s: st.ic + " " + (LANG === "ar" ? st.ar : st.en) })); }, 600); }
+  else if (si < last) setPref("stage", si);
+}
+
+/* ==================== TEAM STREAK ==================== */
+function streakInfo() {
+  const now = new Date(), mkOf = d => d.getFullYear() + "-" + pad(d.getMonth() + 1);
+  const all = mk => S.members.every(m => monthMad(m.id, mk) > 0);
+  const curMk = mkOf(now), curAll = all(curMk);
+  let count = curAll ? 1 : 0;
+  for (let i = 1; i < 120; i++) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); if (all(mkOf(d))) count++; else break; }
+  const missing = S.members.filter(m => !(monthMad(m.id, curMk) > 0));
+  return { count, curAll, missing };
+}
+function renderStreak() {
+  const st = streakInfo(), el = document.getElementById("streak");
+  if (!S.entries.length) { el.hidden = true; return; }
+  el.hidden = false;
+  const names = st.missing.map(mName).join(LANG === "ar" ? " و" : " & ");
+  const main = st.count > 0 ? t("{n} months in a row, all three contributed!", { n: st.count }) : t("Start a family streak this month");
+  const sub = st.curAll ? t("Everyone is in this month. Bravo!") : t("Waiting this month for: {names}", { names });
+  el.innerHTML = '<div class="fire">' + (st.count >= 3 ? "🔥" : st.count > 0 ? "✨" : "🤝") + '</div><div style="min-width:0"><b>' + esc(main) + '</b><span>' + esc(sub) + '</span></div>';
+}
+
+/* ==================== FAMILY MESSAGES ==================== */
+let wallAll = false;
+const CHIPS = ["👏", "❤️", "💪", "🏡", "🤲", "🎉"];
+function renderWall() {
+  setText("wallHead", t("Family messages")); setText("btnSend", t("Send"));
+  document.getElementById("msgIn").placeholder = t("Write to your family...");
+  document.getElementById("chips").innerHTML = CHIPS.map(c => '<button type="button" onclick="sendMsg(\'' + c + '\')">' + c + '</button>').join("");
+  const M = S.msgs.filter(x => !S.deleted[x.id]), m = me();
+  setText("wallCount", M.length ? String(M.length) : "");
+  const list = wallAll ? M : M.slice(-5);
+  document.getElementById("wall").innerHTML = list.map(x => {
+    const mm = memberOf(x.by), mine = m && m.id === x.by;
+    const big = /^\p{Extended_Pictographic}[️‍\p{Extended_Pictographic}]*$/u.test(x.text);
+    return '<div class="msg' + (mine ? " me" : "") + '" style="--mc:' + mm.color + '"><div class="feed"><div class="dot" style="width:28px;height:28px;font-size:12px;">' + esc(initial(mm)) + '</div></div><div class="bub"><div class="mwho">' + esc(mName(mm)) + ' · <span style="color:var(--muted)">' + esc(agoTs(x.ts)) + '</span></div><div class="tx' + (big ? " big" : "") + '">' + esc(x.text) + '</div>' +
+      (mine ? '<button type="button" class="x" style="margin-top:4px;" onclick="delMsg(\'' + x.id + '\')">' + t("Delete") + '</button>' : '') + '</div></div>';
+  }).join("") || '<p class="hint" style="margin:0;">' + t("Say something nice to your sisters and brother.") + '</p>';
+  const more = document.getElementById("wallMore"); more.hidden = M.length <= 5; setText("wallMore", wallAll ? t("Show less") : t("Show all ({n})", { n: M.length }));
+}
+function agoTs(ts) { const d = new Date(n(ts)); const k = ymd(d); return k === ymd() ? d.toTimeString().slice(0, 5) : ago(k); }
+function sendMsg(text) {
+  const m = me(); if (!m) { renderWho(); return; }
+  const inp = document.getElementById("msgIn"), tx = String(text || inp.value).trim().slice(0, 200);
+  if (!tx) return;
+  S.msgs.push({ id: uid(), by: m.id, text: tx, ts: Date.now() }); S.msgs = S.msgs.slice(-300);
+  if (!text) inp.value = "";
+  save(); tap("msg", 12); renderWall();
+}
+function delMsg(id) { S.deleted[id] = Date.now(); S.msgs = S.msgs.filter(x => x.id !== id); save(); renderWall(); }
+
+/* ==================== DREAM ROOMS ==================== */
+const ROOMS = [
+  { id: "salon", en: "Living room", ar: "الصالون", at: 10, ic: "🛋️" },
+  { id: "kitchen", en: "Kitchen", ar: "المطبخ", at: 25, ic: "🍳" },
+  { id: "bed1", en: "Bedroom", ar: "غرفة النوم", at: 40, ic: "🛏️" },
+  { id: "bed2", en: "Guest room", ar: "غرفة الضيوف", at: 55, ic: "🧳" },
+  { id: "balcony", en: "Balcony", ar: "الشرفة", at: 70, ic: "🌿" },
+  { id: "terrace", en: "Roof terrace", ar: "السطح", at: 85, ic: "🌙" },
+  { id: "door", en: "Front door", ar: "باب الدار", at: 100, ic: "🔑" }
+];
+function roomName(r) { return LANG === "ar" ? r.ar : r.en; }
+function renderRooms(pct) {
+  setText("roomsHead", t("Rooms of our home"));
+  const m = me(), open = ROOMS.filter(r => pct >= r.at).length;
+  setText("roomsCount", open + "/" + ROOMS.length);
+  setText("roomsHint", t("Each room opens as we save. Claim one to decorate it, and write your wish for it."));
+  document.getElementById("rooms").innerHTML = ROOMS.map(r => {
+    const c = S.rooms[r.id], who = c && c.by ? memberOf(c.by) : null, isOpen = pct >= r.at;
+    const cls = !isOpen ? "" : who ? (m && who.id === m.id ? " open mine" : " open taken") : " open";
+    const sub = !isOpen ? "🔒 " + r.at + "%" : who ? (c.wish ? c.wish : mName(who)) : t("Free to claim");
+    return '<div class="room' + cls + '"' + (who ? ' style="--mc:' + who.color + '"' : '') + ' onclick="openRoom(\'' + r.id + '\')" role="button" tabindex="0">' +
+      (who ? '<span class="own">' + esc(initial(who)) + '</span>' : '') + '<span class="ri">' + r.ic + '</span><span class="rn">' + esc(roomName(r)) + '</span><span class="rs">' + esc(sub) + '</span></div>';
+  }).join("");
+  const P = prefs();
+  if (P.roomsOpen == null) setPref("roomsOpen", open);
+  else if (open > P.roomsOpen) { setPref("roomsOpen", open); const r = ROOMS[open - 1]; setTimeout(() => toast(t("New room unlocked: {r}", { r: r.ic + " " + roomName(r) })), 1500); }
+  else if (open < P.roomsOpen) setPref("roomsOpen", open);
+}
+function openRoom(id) {
+  const r = ROOMS.find(x => x.id === id), pct = goalMad() > 0 ? totalMad() / goalMad() * 100 : 0, m = me();
+  if (!r || !m) return;
+  if (pct < r.at) { toast(t("{r} opens at {p}. Keep saving!", { r: roomName(r), p: r.at + "%" })); return; }
+  const c = S.rooms[id], who = c && c.by ? memberOf(c.by) : null, mine = who && who.id === m.id;
+  document.getElementById("sheet").innerHTML = '<h2><span>' + r.ic + ' ' + esc(roomName(r)) + '</span><button type="button" class="x" onclick="closeSheet()" aria-label="close">✕</button></h2>' +
+    (who && !mine ? '<p style="font-weight:800;">' + esc(tf("{name} will decorate this room.", who, { name: mName(who) })) + '</p>' + (c.wish ? '<p class="quote" style="margin:10px 0;">“' + esc(c.wish) + '”</p>' : '') +
+      '<button type="button" class="btn btn-soft" onclick="closeSheet()">' + t("Lovely!") + '</button>'
+    : '<div class="fg"><label for="rWish">' + t("Your wish for this room") + '</label><input type="text" id="rWish" maxlength="80" value="' + esc(mine ? c.wish || "" : "") + '" placeholder="' + esc(t("e.g. blue zellige and a big sofa")) + '"></div>' +
+      '<button type="button" class="btn btn-main" onclick="claimRoom(\'' + id + '\')">' + t(mine ? "Save" : "I'll decorate this room") + '</button>' +
+      (mine ? '<button type="button" class="btn btn-soft btn-sm" style="margin-top:8px;" onclick="unclaimRoom(\'' + id + '\')">' + t("Leave it to the others") + '</button>' : ''));
+  document.getElementById("sheetBg").hidden = false;
+}
+function claimRoom(id) { const m = me(); S.rooms[id] = { by: m.id, wish: document.getElementById("rWish").value.trim(), at: Date.now() }; save(); closeSheet(); play("room"); buzz(30); confetti(20); renderHome(); }
+function unclaimRoom(id) { S.rooms[id] = { by: "", wish: "", at: Date.now() }; save(); closeSheet(); renderHome(); }
+
+/* ==================== DAILY WELCOME ==================== */
+const PERSONAL = {
+  malika: [
+    ["Every drink you make in New York lays a brick in Morocco.", "كل مشروب تحضّرينه في نيويورك يضع حجراً في بيتنا بالمغرب."],
+    ["Long shifts in Manhattan, a quiet balcony in Morocco. That's the deal.", "ساعات طويلة في مانهاتن، مقابل شرفة هادئة في المغرب. هذه هي الصفقة."],
+    ["Malika, you are the reason this dream crossed the ocean.", "مليكة، أنتِ من جعل هذا الحلم يعبر المحيط."],
+    ["One less coffee out today can be one more tile at home.", "قهوة أقل خارج البيت اليوم، زليجة أكثر في بيتنا."],
+    ["New York is a stop. Morocco is home.", "نيويورك محطة، والمغرب هو البيت."],
+    ["Tired feet today, the keys tomorrow.", "أقدام متعبة اليوم، والمفاتيح غداً."],
+    ["Your brother in Fez and your sister in Doha are building with you.", "أخوك في فاس وأختك في الدوحة يبنيان معك."],
+    ["Every $100 is close to 1,000 dirhams for our home.", "كل 100$ تقارب 1000 درهم لبيتنا."]
+  ],
+  jazia: [
+    ["From the heat of Doha to the shade of our own home.", "من حرّ الدوحة إلى ظل بيتنا."],
+    ["Jazia, every riyal you send builds a wall that stays.", "جازية، كل ريال ترسلينه يبني جداراً يبقى."],
+    ["Far away in Qatar, close in every window of this house.", "بعيدة في قطر، وقريبة في كل نافذة من هذا البيت."],
+    ["Your effort abroad will become the family table at home.", "تعبك في الغربة سيصير مائدة العائلة في بيتنا."],
+    ["Doha today, Morocco forever.", "الدوحة اليوم، والمغرب دائماً."],
+    ["Small transfers, a big home. Keep going.", "تحويلات صغيرة، وبيت كبير. واصلي."],
+    ["Your sister in New York and your brother in Fez are proud of you.", "أختك في نيويورك وأخوك في فاس فخوران بك."],
+    ["Before shopping in Doha, picture our front door.", "قبل أي تسوّق في الدوحة، تخيّلي باب بيتنا."]
+  ],
+  kamal: [
+    ["You started this idea. Your sisters followed. Lead the way.", "أنت بدأت الفكرة، وأخواتك تبعنك. كن القدوة."],
+    ["From Fez you hold the plan for all three.", "من فاس تحمل الخطة للثلاثة."],
+    ["Your hard work in Fez is the foundation of this home.", "عملك في فاس هو أساس هذا البيت."],
+    ["Show your sisters the way: add something this week.", "أرِ أخواتك الطريق: أضف شيئاً هذا الأسبوع."],
+    ["You are the one in Morocco: visit, compare, find our home.", "أنت هنا في المغرب: زُر، قارن، وابحث عن بيتنا."],
+    ["Three salaries, one dream. Yours counts.", "ثلاثة رواتب، حلم واحد. مساهمتك تُحسب."],
+    ["Your sisters send money from far away. Make them proud of the plan.", "أخواتك يرسلن المال من بعيد. اجعلهن فخورات بالخطة."],
+    ["Every visit to an apartment brings the keys closer.", "كل زيارة لشقة تقرّب المفاتيح."]
+  ]
+};
+function personalLine(m, d) {
+  d = d || new Date(); const L = PERSONAL[m.id];
+  if (!L) return quoteOf(d);
+  const doy = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  return L[(doy + d.getFullYear()) % L.length][LANG === "ar" ? 1 : 0];
+}
+function maybeDaily() {
+  const m = me(); if (!m) return;
+  const P = prefs(), today = ymd();
+  if (P.daily === today) return;
+  const since = n(P.lastVisit), newE = live().filter(e => n(e.ts) > since && e.by !== m.id && e.type !== "withdraw");
+  const newMad = newE.reduce((a, e) => a + toMad(e.amt, e.cur), 0), newMsgs = S.msgs.filter(x => n(x.ts) > since && x.by !== m.id).length;
+  setPref("daily", today); setPref("lastVisit", Date.now());
+  const g = goalMad(), pct = g > 0 ? Math.min(100, totalMad() / g * 100) : 0, st = STAGES[stageOf(pct)], h = new Date().getHours();
+  const greet = t(h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening") + (LANG === "ar" ? " يا " : ", ") + mName(m);
+  const mo = monthMad(m.id), pl = toMad(m.pledge, m.cur);
+  document.getElementById("sheet").innerHTML = '<div class="welcome"><div class="wh">' + st.ic + '</div><div class="wg">' + esc(greet) + '</div><div class="wm">' + esc(personalLine(m)) + '</div>' +
+    '<div class="wst"><div class="stat"><small>' + t("Our home") + '</small><b class="num">' + (pct < 10 ? pct.toFixed(1) : Math.floor(pct)) + '%</b></div>' +
+    '<div class="stat"><small>' + t("New from family") + '</small><b class="num" style="font-size:15px;"><bdi>' + (newMad > 0 ? "+" + inView(newMad) : "—") + '</bdi></b></div>' +
+    '<div class="stat"><small>' + t("Me, this month") + '</small><b class="num" style="font-size:15px;"><bdi>' + (pl > 0 ? shortMoney(fromMad(mo, m.cur), m.cur) + "/" + shortMoney(m.pledge, m.cur) : money(fromMad(mo, m.cur), m.cur)) + '</bdi></b></div></div>' +
+    (newMsgs ? '<p class="hint" style="margin:-4px 0 12px; font-weight:800;">💬 ' + t("{n} new messages from the family", { n: newMsgs }) + '</p>' : '') +
+    '<button type="button" class="btn btn-main" onclick="closeSheet();openAdd(\'save\')">' + t("+ Add my contribution") + '</button>' +
+    '<button type="button" class="btn btn-soft btn-sm" style="margin-top:8px;" onclick="closeSheet()">' + t("Let's go") + ' 🏡</button></div>';
+  document.getElementById("sheetBg").hidden = false;
+  if (newMad > 0) setTimeout(() => confetti(24), 300);
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") setPref("lastVisit", Date.now()); });
+
+/* ==================== ADD / DELETE ==================== */
+let addType = "save", addCur = "MAD", editId = null;
+function openAdd(type) {
+  const m = me(); if (!m) { renderWho(); return; }
+  addType = type; addCur = m.cur; editId = null;
+  const curs = Array.from(new Set([m.cur, "MAD", "USD", "QAR", "EUR"]));
+  document.getElementById("sheet").innerHTML =
+    '<h2><span>' + t(type === "save" ? "Add my contribution" : "Take money out") + '</span><button type="button" class="x" onclick="closeSheet()" aria-label="close">✕</button></h2>' +
+    '<input type="number" class="amt-input" id="aAmt" inputmode="decimal" placeholder="0" aria-label="' + t("Amount") + '">' +
+    '<div class="seg" style="margin:10px 0 14px;" id="curSeg">' + curs.map(c => '<button type="button" class="' + (c === addCur ? "on" : "") + '" onclick="setCur(\'' + c + '\')">' + c + '</button>').join("") + '</div>' +
+    '<div class="grid-2"><div class="fg"><label for="aDate">' + t("Date") + '</label><input type="date" id="aDate" value="' + ymd() + '"></div>' +
+    '<div class="fg"><label for="aNote">' + t("Note (optional)") + '</label><input type="text" id="aNote"></div></div>' +
+    '<button type="button" class="btn ' + (type === "save" ? "btn-main" : "btn-terra") + '" onclick="saveEntry()">' + t("Save") + '</button>' +
+    (type === "save" ? '<button type="button" class="btn btn-soft btn-sm" style="margin-top:8px;" onclick="openAdd(\'withdraw\')">' + t("Withdraw instead") + '</button>' : '');
+  document.getElementById("sheetBg").hidden = false;
+  tap("open", 12);
+  setTimeout(() => { const a = document.getElementById("aAmt"); if (a) a.focus(); }, 250);
+}
+function setCur(c) { tap(); addCur = c; document.querySelectorAll("#curSeg button").forEach(b => b.className = b.textContent === c ? "on" : ""); }
+function closeSheet() { if (!document.getElementById("sheetBg").hidden) play("close"); document.getElementById("sheetBg").hidden = true; }
+function saveEntry() {
+  const amt = n(document.getElementById("aAmt").value), m = me();
+  if (amt <= 0) { toast(t("Enter an amount."), true); return; }
+  const d = document.getElementById("aDate").value || ymd(), note = document.getElementById("aNote").value.trim();
+  if (editId) {
+    const e = S.entries.find(x => x.id === editId);
+    if (e) { e.amt = amt; e.cur = addCur; e.d = d; e.note = note; e.ed = Date.now(); }
+    editId = null;
+    save(); closeSheet(); checkMiles(); toast(t("Saved.")); renderAll();
+    return;
+  }
+  S.entries.push({ id: uid(), d: d, by: m.id, type: addType, amt, cur: addCur, note: note, ts: Date.now() });
+  save(); closeSheet();
+  if (addType === "save") { goTab("home"); window.scrollTo(0, 0); setTimeout(() => houseBurst("+" + money(amt, addCur) + " 🧱"), 250); const g = goalMad(); toast(t("Added {x} to our home. {pct} done!", { x: money(amt, addCur), pct: (g > 0 ? Math.min(100, totalMad() / g * 100).toFixed(1) : 0) + "%" })); play("save"); buzz([0, 25, 40, 35]); confetti(16); }
+  else toast(t("Saved."));
+  checkMiles(); renderAll();
+}
+function openEdit(id) {
+  const e = live().find(x => x.id === id), m = me();
+  if (!e || !m || m.id !== e.by) return;
+  editId = id; addType = e.type; addCur = e.cur;
+  const curs = Array.from(new Set([e.cur, m.cur, "MAD", "USD", "QAR", "EUR"]));
+  document.getElementById("sheet").innerHTML =
+    '<h2><span>' + t(e.type === "save" ? "Edit my contribution" : "Edit the withdrawal") + '</span><button type="button" class="x" onclick="closeSheet()" aria-label="close">✕</button></h2>' +
+    '<input type="number" class="amt-input" id="aAmt" inputmode="decimal" value="' + n(e.amt) + '" aria-label="' + t("Amount") + '">' +
+    '<div class="seg" style="margin:10px 0 14px;" id="curSeg">' + curs.map(c => '<button type="button" class="' + (c === addCur ? "on" : "") + '" onclick="setCur(\'' + c + '\')">' + c + '</button>').join("") + '</div>' +
+    '<div class="grid-2"><div class="fg"><label for="aDate">' + t("Date") + '</label><input type="date" id="aDate" value="' + esc(e.d) + '"></div>' +
+    '<div class="fg"><label for="aNote">' + t("Note (optional)") + '</label><input type="text" id="aNote" value="' + esc(e.note || "") + '"></div></div>' +
+    '<button type="button" class="btn btn-main" onclick="saveEntry()">' + t("Save changes") + '</button>' +
+    '<button type="button" class="btn btn-soft btn-sm" style="margin-top:8px; color:var(--red);" onclick="askDelete(\'' + id + '\')">' + t("Delete") + '</button>';
+  document.getElementById("sheetBg").hidden = false;
+}
+
+function askDelete(id) {
+  document.getElementById("sheet").innerHTML = '<h2><span>' + t("Delete this contribution?") + '</span></h2><div class="grid-2"><button type="button" class="btn btn-terra" onclick="delEntry(\'' + id + '\')">' + t("Delete") + '</button><button type="button" class="btn btn-soft" onclick="closeSheet()">✕</button></div>';
+  document.getElementById("sheetBg").hidden = false;
+}
+function delEntry(id) { play("del"); buzz(20); S.deleted[id] = Date.now(); S.entries = S.entries.filter(e => e.id !== id); delete S.likes[id]; save(); closeSheet(); renderAll(); }
+function checkMiles(quiet) {
+  const g = goalMad(), s = totalMad(), fresh = [];
+  MILES.forEach(x => { if (!S.miles[x.id] && x.test(s, g)) { S.miles[x.id] = ymd(); fresh.push(x); } });
+  if (!fresh.length) return;
+  save();
+  if (!quiet) setTimeout(() => { play("mile"); buzz([0, 60, 80, 60, 80, 120]); confetti(60); toast(t("New milestone: {m}!", { m: t(fresh[fresh.length - 1].label) })); }, 700);
+}
+
+/* ==================== PHOTO (shared with the family) ==================== */
+function pickPhoto(ev) {
+  const f = ev.target.files && ev.target.files[0]; if (!f) return;
+  const img = new Image(), url = URL.createObjectURL(f);
+  img.onload = () => {
+    const sc = Math.min(1, 900 / Math.max(img.width, img.height)), c = document.createElement("canvas");
+    c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+    let data = c.toDataURL("image/jpeg", 0.72); if (data.length > 700000) data = c.toDataURL("image/jpeg", 0.5);
+    if (!lsSet(PHOTO_KEY, data)) { toast(t("That photo is too big. Try another one."), true); return; }
+    S.photoVer = String(Date.now()); setPref("photoVer", S.photoVer); save(); uploadPhoto(data);
+    toast(t("Photo saved.")); renderHome();
+  };
+  img.src = url; ev.target.value = "";
+}
+
+/* ==================== FAMILY SYNC (Firestore REST, Kamal's Firebase project) ====================
+   Three phones write to one document. On a clash the phone merges instead of overwriting:
+   contributions are joined by id, deletions are remembered, settings keep the newest edit. */
+let syncCfg = null, syncMeta = { ut: null, dirty: false, last: "" }, syncState = "off", syncBusy = false, syncTimer = null, pollT = null;
+function syncEnabled() { return !!(syncCfg && syncCfg.pid && syncCfg.key && syncCfg.code); }
+function docUrl(suffix, extra) {
+  return "https://firestore.googleapis.com/v1/projects/" + encodeURIComponent(syncCfg.pid) + "/databases/(default)/documents/carts/" +
+    encodeURIComponent(syncCfg.code + suffix) + "?key=" + encodeURIComponent(syncCfg.key) + (extra || "");
+}
+function readJson(r) { return r.text().then(tx => { let j = {}; try { j = tx ? JSON.parse(tx) : {}; } catch (e) {} if (!r.ok) { const e = new Error((j.error && j.error.message) || "HTTP " + r.status); e.status = r.status; e.code = (j.error && j.error.status) || ""; throw e; } return j; }); }
+function fetchDoc(suffix) { return fetch(docUrl(suffix), { cache: "no-store" }).then(r => r.status === 404 ? null : readJson(r).then(j => ({ ut: j.updateTime, data: j.fields && j.fields.data ? j.fields.data.stringValue : "" }))); }
+function saveMeta() { lsSet(SYNC_KEY, JSON.stringify({ cfg: syncCfg, meta: syncMeta })); }
+function setSyncState(s, err) { syncState = s; document.getElementById("syncErr").textContent = err && (s === "error") ? err : ""; renderSyncDot(); if (curTab === "me") renderSync(); }
+function renderSyncDot() {
+  const d = document.getElementById("syncDot");
+  d.className = "sync-dot" + (!syncEnabled() ? "" : syncState === "busy" ? " busy" : syncState === "ok" && !syncMeta.dirty ? " ok" : syncState === "error" || syncState === "offline" ? " err" : " busy");
+  d.title = syncStateText();
+}
+function syncStateText() { return !syncEnabled() ? t("Not linked") : syncState === "busy" ? t("Syncing...") : syncState === "offline" ? t("Offline") : syncState === "error" ? t("Sync error") : t("Synced"); }
+function renderSync() {
+  setText("syncHead", t("Family sync")); setText("syncState", syncStateText());
+  const on = syncEnabled(); document.getElementById("syncOn").hidden = !on; document.getElementById("syncOffBox").hidden = on;
+  setText("lblLastSync", t("Last sync")); setText("lastSync", syncMeta.last || "-");
+  setText("btnSyncNow", t("Sync now")); setText("btnCopy", t("Copy family code")); setText("btnSyncOff", t("Stop sync on this phone"));
+  setText("syncShareHint", t("Send this code only to Malika and Jazia (WhatsApp). Anyone with it can see and change the family fund."));
+  setText("syncIntro", t("Kamal: paste your Coffee Boost or Baraka code (CB1|… / HB1|…) once to create the family space. Sisters: paste the family code Kamal sends you (DN1|…)."));
+  setText("btnJoin", t("Link this phone"));
+  if (on) document.getElementById("joinOut").value = joinString();
+}
+function joinString() { return syncEnabled() ? ["DN1", syncCfg.pid, syncCfg.key, syncCfg.code].join("|") : ""; }
+function mergeState(a, b) {
+  const out = JSON.parse(JSON.stringify(a.setAt >= b.setAt ? a : b));
+  out.deleted = Object.assign({}, b.deleted || {}, a.deleted || {});
+  const map = {};
+  (b.entries || []).concat(a.entries || []).forEach(e => {
+    if (!e || !e.id || out.deleted[e.id]) return;
+    const old = map[e.id];
+    map[e.id] = (old && n(old.ed) > n(e.ed)) ? old : e;
+  });
+  out.entries = Object.values(map);
+  out.miles = Object.assign({}, b.miles || {}, a.miles || {});
+  out.likes = {};
+  [b.likes || {}, a.likes || {}].forEach(L => { for (const id in L) if (!out.deleted[id]) out.likes[id] = Object.assign(out.likes[id] || {}, L[id]); });
+  const hm = {};
+  (b.homes || []).concat(a.homes || []).forEach(h => { if (h && h.id && !out.deleted[h.id]) hm[h.id] = h; });
+  out.homes = Object.values(hm).sort((x, y) => n(x.ts) - n(y.ts));
+  const mm = {};
+  (b.msgs || []).concat(a.msgs || []).forEach(x => { if (x && x.id && !out.deleted[x.id]) mm[x.id] = x; });
+  out.msgs = Object.values(mm).sort((x, y) => n(x.ts) - n(y.ts)).slice(-300);
+  out.gone = Object.assign({}, b.gone || {}, a.gone || {});
+  out.rooms = {};
+  [b.rooms || {}, a.rooms || {}].forEach(R => { for (const k in R) if (R[k] && (!out.rooms[k] || n(R[k].at) >= n(out.rooms[k].at))) out.rooms[k] = R[k]; });
+  out.photoVer = String(Math.max(n(a.photoVer), n(b.photoVer)) || "");
+  out.setAt = Math.max(n(a.setAt), n(b.setAt));
+  return out;
+}
+function sig(x) {
+  x = x || {}; const del = x.deleted || {};
+  const L = x.likes || {};
+  return JSON.stringify([(x.entries || []).filter(e => !del[e.id]).map(e => e.id + ":" + n(e.ed) + ":" + n(e.amt) + e.cur + e.d).sort(), Object.keys(del).sort(), n(x.setAt), Object.keys(x.miles || {}).sort(), String(x.photoVer || ""),
+    Object.keys(L).sort().map(k => k + ":" + Object.keys(L[k]).sort().join(",")), (x.homes || []).filter(h => !del[h.id]).map(h => h.id).sort(),
+    (x.msgs || []).filter(m => !del[m.id]).map(m => m.id).sort(), Object.keys(x.rooms || {}).sort().map(k => k + ":" + n((x.rooms[k] || {}).at)),
+    (x.members || []).map(m => m.id + m.name + m.cur + n(m.pledge) + m.color).join("|")]);
+}
+function sameState(a, b) { return sig(a) === sig(b); }
+function markDirty() { if (!syncEnabled()) return; syncMeta.dirty = true; saveMeta(); renderSyncDot(); clearTimeout(syncTimer); syncTimer = setTimeout(push, 1200); }
+function isOffline(e) { return !e || !e.status || navigator.onLine === false; }
+function push(tries) {
+  tries = tries || 0;
+  if (!syncEnabled() || !syncMeta.dirty) return Promise.resolve();
+  if (syncBusy) { clearTimeout(syncTimer); syncTimer = setTimeout(push, 1200); return Promise.resolve(); }
+  syncBusy = true; setSyncState("busy");
+  const pre = syncMeta.ut ? "&currentDocument.updateTime=" + encodeURIComponent(syncMeta.ut) : "&currentDocument.exists=false";
+  return fetch(docUrl("-darna", pre), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fields: { data: { stringValue: JSON.stringify(S) } } }) })
+    .then(readJson).then(j => { syncBusy = false; syncMeta.ut = j.updateTime; syncMeta.dirty = false; syncMeta.last = ymd() + " " + new Date().toTimeString().slice(0, 5); saveMeta(); setSyncState("ok"); })
+    .catch(e => {
+      syncBusy = false;
+      if (e && (e.code === "FAILED_PRECONDITION" || e.code === "ALREADY_EXISTS" || e.status === 409) && tries < 3) {
+        return fetchDoc("-darna").then(rem => {
+          if (rem && rem.data) { S = mergeState(S, JSON.parse(rem.data)); normalize(); writeLocal(); }
+          syncMeta.ut = rem ? rem.ut : null; syncMeta.dirty = true; saveMeta(); renderAll();
+          return push(tries + 1);
+        });
+      }
+      setSyncState(isOffline(e) ? "offline" : "error", e && e.message);
+    });
+}
+function pull(quiet) {
+  if (!syncEnabled() || syncBusy) return Promise.resolve();
+  if (syncMeta.dirty) return push();
+  syncBusy = true;
+  return fetchDoc("-darna").then(rem => {
+    syncBusy = false;
+    if (!rem) { syncMeta.ut = null; syncMeta.dirty = true; saveMeta(); return push(); }
+    if (rem.ut !== syncMeta.ut) {
+      const before = JSON.stringify(S), merged = mergeState(S, JSON.parse(rem.data || "{}"));
+      S = merged; normalize(); writeLocal(); syncMeta.ut = rem.ut;
+      if (!sameState(S, JSON.parse(rem.data || "{}"))) syncMeta.dirty = true;
+      syncMeta.last = ymd() + " " + new Date().toTimeString().slice(0, 5); saveMeta(); setSyncState("ok");
+      checkPhoto(); checkMiles(true);
+      if (JSON.stringify(S) !== before) {
+        const beforeIds = new Set((JSON.parse(before).entries || []).map(e => e.id)), m = me();
+        const fresh = live().filter(e => !beforeIds.has(e.id) && e.type === "save" && (!m || e.by !== m.id));
+        renderAll(); if (!quiet) toast(t("Updates from the family arrived."));
+        if (fresh.length) { play("arrive"); buzz([0, 30, 50, 30]); }
+        if (fresh.length && curTab === "home") { const x = fresh[fresh.length - 1], mm = memberOf(x.by); houseBurst("+" + money(x.amt, x.cur) + (mm ? " · " + mName(mm) : "")); }
+      }
+      if (syncMeta.dirty) return push();
+    } else { syncMeta.last = ymd() + " " + new Date().toTimeString().slice(0, 5); saveMeta(); setSyncState("ok"); checkPhoto(); }
+  }).catch(e => { syncBusy = false; setSyncState(isOffline(e) ? "offline" : "error", e && e.message); });
+}
+function uploadPhoto(data) {
+  if (!syncEnabled()) return;
+  fetch(docUrl("-darna-photo", ""), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fields: { data: { stringValue: data } } }) }).catch(() => {});
+}
+function checkPhoto() {
+  if (!S.photoVer || S.photoVer === prefs().photoVer) return;
+  fetchDoc("-darna-photo").then(rem => { if (rem && rem.data && lsSet(PHOTO_KEY, rem.data)) { setPref("photoVer", S.photoVer); if (curTab === "home") renderHome(); } }).catch(() => {});
+}
+function syncNow() { if (syncMeta.dirty) push(); else pull(false); }
+function randomCode() { const a = "abcdefghijkmnpqrstuvwxyz23456789", r = new Uint32Array(26); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(r) : r.forEach((_, i) => r[i] = Math.random() * 1e9); return "dn-" + Array.from(r, x => a[x % a.length]).join(""); }
+function syncJoin() {
+  const raw = document.getElementById("joinIn").value.trim(), p = raw.split("|");
+  if (p.length !== 4 || ["DN1", "CB1", "HB1", "DB1"].indexOf(p[0]) < 0 || p[3].length < 20) { toast(t("That code is not right. Copy it in full."), true); return; }
+  const creating = p[0] !== "DN1";
+  syncCfg = { pid: p[1].trim(), key: p[2].trim(), code: creating ? randomCode() : p[3].trim() };
+  syncMeta = { ut: null, dirty: false, last: "" }; setSyncState("busy");
+  fetchDoc("-darna").then(rem => {
+    saveMeta();
+    if (rem && rem.data) { S = mergeState(S, JSON.parse(rem.data)); normalize(); writeLocal(); syncMeta.ut = rem.ut; syncMeta.dirty = true; saveMeta(); checkPhoto(); toast(t("Linked! The family fund is now on this phone.")); return push(); }
+    syncMeta.dirty = true; saveMeta();
+    return push().then(() => { if (lsGet(PHOTO_KEY)) uploadPhoto(lsGet(PHOTO_KEY)); toast(t(creating ? "Family space created. Now copy the family code and send it to your sisters." : "Linked! The family fund is now on this phone.")); });
+  }).then(() => { startPolling(); nativeSync(); renderAll(); })
+    .catch(e => { syncCfg = null; lsDel(SYNC_KEY); setSyncState("off"); renderAll(); toast(t("Could not connect. Check the internet and the code."), true); });
+}
+function syncOff() {
+  document.getElementById("sheet").innerHTML = '<h2><span>' + t("Stop syncing on this phone? The data stays here.") + '</span></h2><div class="grid-2"><button type="button" class="btn btn-terra" onclick="doSyncOff()">' + t("Stop sync on this phone") + '</button><button type="button" class="btn btn-soft" onclick="closeSheet()">✕</button></div>';
+  document.getElementById("sheetBg").hidden = false;
+}
+function doSyncOff() { syncCfg = null; setTimeout(nativeSync, 0); syncMeta = { ut: null, dirty: false, last: "" }; lsDel(SYNC_KEY); clearInterval(pollT); setSyncState("off"); closeSheet(); renderAll(); }
+function copyJoin() {
+  const box = document.getElementById("joinOut"); box.value = joinString();
+  const done = () => toast(t("Copied."));
+  try { navigator.clipboard.writeText(box.value).then(done, () => { box.select(); try { document.execCommand("copy"); done(); } catch (e) {} }); }
+  catch (e) { box.select(); try { document.execCommand("copy"); done(); } catch (e2) {} }
+}
+function startPolling() { clearInterval(pollT); if (syncEnabled()) pollT = setInterval(() => { if (document.visibilityState !== "hidden") pull(false); }, 20000); }
+function initSync() {
+  try { const o = JSON.parse(lsGet(SYNC_KEY) || "null"); if (o) { syncCfg = o.cfg; syncMeta = o.meta || syncMeta; } } catch (e) {}
+  renderSyncDot(); if (!syncEnabled()) return;
+  pull(true); startPolling();
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") pull(false); });
+  window.addEventListener("online", () => pull(false));
+}
+
+/* ==================== ANDROID APP (window.DarnaNative) ==================== */
+const NATIVE = (() => { try { return window.DarnaNative && window.DarnaNative.isNative() ? window.DarnaNative : null; } catch (e) { return null; } })();
+function nStatus() { try { return NATIVE ? JSON.parse(NATIVE.status()) : {}; } catch (e) { return {}; } }
+function nativeSync() {
+  if (!NATIVE) return;
+  const P = prefs(), m = me();
+  try {
+    NATIVE.setup(JSON.stringify({ pid: syncCfg ? syncCfg.pid : "", key: syncCfg ? syncCfg.key : "", code: syncCfg ? syncCfg.code : "", me: m ? m.id : "", lang: LANG,
+      payOn: P.payOn !== false, payDay: n(P.remDay == null ? 5 : P.remDay), payTime: P.remTime || "19:00" }));
+  } catch (e) {}
+}
+function togglePay() { setPref("payOn", prefs().payOn === false); nativeSync(); renderPlan(); toast(t(prefs().payOn !== false ? "Payday notification is on." : "Payday notification is off.")); }
+window.onNativeResume = function () { if (curTab === "plan") renderPlan(); pull(true); setTimeout(maybeDaily, 500); setTimeout(() => pageCheck(false), 1500); };
+
+/* ==================== APP UPDATES THROUGH THE FAMILY SYNC ====================
+   One phone picks a new page file; it goes to Firestore as <code>-page, and every phone
+   on the same family code downloads it, keeps it waiting, and switches with one tap. */
+const APP_BUILD = 1002; // raise with every new version of this file
+let lastPageCheck = 0, pageBusy = false;
+function canUpdate() { try { return !!(NATIVE && typeof NATIVE.stageUpdate === "function"); } catch (e) { return false; } }
+function renderUpd() {
+  const card = document.getElementById("updCard");
+  card.hidden = !canUpdate();
+  if (card.hidden) return;
+  setText("updHead", t("App updates")); setText("updVer", t("version {n}", { n: APP_BUILD }));
+  setText("btnUpdCheck", t("Check for an update now"));
+  setText("btnUpdFile", t("Update from a file and send it to the family"));
+  setText("btnUpdSend", t("Send my version to the family"));
+  setText("updHint", t("Updates sent by the family arrive on their own when you open the app. Your data stays as it is."));
+  setText("btnUpdNow", t("Update now")); setText("btnUpdLater", t("Later"));
+}
+function pageDocFields(j) { return (j && j.fields) || {}; }
+function pageCheck(force) {
+  if (!canUpdate() || pageBusy) return;
+  if (!syncEnabled()) { if (force) toast(t("Turn on family sync first."), true); return; }
+  if (!force && Date.now() - lastPageCheck < 10 * 60000) return;
+  lastPageCheck = Date.now(); pageBusy = true;
+  const st = document.getElementById("updState");
+  if (force && st) st.textContent = t("Looking...");
+  fetch(docUrl("-page", "&mask.fieldPaths=build&mask.fieldPaths=by"), { cache: "no-store" })
+    .then(r => (r.status === 404 ? null : readJson(r)))
+    .then(j => {
+      const f = pageDocFields(j), b = f.build ? parseInt(f.build.integerValue || "0", 10) : 0, by = f.by ? f.by.stringValue : "";
+      if (!b || b <= APP_BUILD) { pageBusy = false; if (st) st.textContent = t("You have the newest version ({n}).", { n: APP_BUILD }); return; }
+      return fetch(docUrl("-page", "&mask.fieldPaths=html"), { cache: "no-store" }).then(readJson).then(j2 => {
+        pageBusy = false;
+        const html = pageDocFields(j2).html ? pageDocFields(j2).html.stringValue : "";
+        let staged = 0; try { staged = NATIVE.stageUpdate(html); } catch (e) {}
+        if (staged > APP_BUILD) {
+          if (st) st.textContent = t("A new version is ready ({n}).", { n: staged });
+          setText("updPopTitle", "✨ " + (by ? t("A new version from {name}", { name: by }) : t("A new version")));
+          setText("updPopMsg", t("Your data stays as it is."));
+          document.getElementById("updPop").hidden = false;
+          fanfare();
+        } else if (force) toast(t("Could not prepare the update. Ask for it to be sent again."), true);
+      });
+    })
+    .catch(() => { pageBusy = false; if (st) st.textContent = t("Could not look for an update (internet?)."); });
+}
+function applyPageNow() {
+  document.getElementById("updPop").hidden = true;
+  writeLocal();
+  try { if (!NATIVE.applyUpdate()) toast(t("The update is not ready yet."), true); } catch (e) {}
+}
+function buildOfPage(html) { const m = /APP_BUILD\s*=\s*(\d+)/.exec(html || ""); return m ? parseInt(m[1], 10) : 0; }
+function sendPage(html, b) {
+  const body = JSON.stringify({ fields: { build: { integerValue: String(b) }, html: { stringValue: html }, by: { stringValue: me() ? mName(me()) : "" }, at: { stringValue: ymd() } } });
+  return fetch(docUrl("-page"), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: body }).then(readJson);
+}
+function sendCurrentPage() {
+  if (!canUpdate()) return;
+  if (!syncEnabled()) { toast(t("Turn on family sync first."), true); return; }
+  let html = ""; try { html = NATIVE.currentHtml(); } catch (e) {}
+  const b = buildOfPage(html);
+  if (!b) { toast(t("Could not read your version."), true); return; }
+  toast(t("Sending..."));
+  sendPage(html, b).then(() => toast(t("Version {n} sent. It reaches the others when they open the app.", { n: b })))
+    .catch(() => toast(t("Could not send. Check the internet."), true));
+}
+function updateFromFile(ev) {
+  const f = ev.target.files && ev.target.files[0]; ev.target.value = "";
+  if (!f || !canUpdate()) return;
+  const r = new FileReader();
+  r.onload = () => {
+    const html = String(r.result || ""), b = buildOfPage(html);
+    if (html.indexOf("DARNA_STATE_V1") < 0 || !b) { toast(t("That file is not a Darna update."), true); return; }
+    if (b <= APP_BUILD) { toast(t("That file is not newer than your version ({n}).", { n: APP_BUILD }), true); return; }
+    let staged = 0; try { staged = NATIVE.stageUpdate(html); } catch (e) {}
+    if (!staged) { toast(t("The file is broken or incomplete."), true); return; }
+    const done = sent => {
+      toast(sent ? t("Update sent to the family. Yours is updating now...") : t("Could not send it now; yours will update. Send it later."));
+      writeLocal();
+      setTimeout(() => { try { NATIVE.applyUpdate(); } catch (e) {} }, 1600);
+    };
+    if (syncEnabled()) sendPage(html, b).then(() => done(true), () => done(false)); else done(false);
+  };
+  r.readAsText(f);
+}
+
+/* ==================== FILES ==================== */
+function shareOrDownload(text, name, mime) {
+  const blob = new Blob([text], { type: mime });
+  try { const file = new File([blob], name, { type: mime }); if (navigator.canShare && navigator.canShare({ files: [file] })) return navigator.share({ files: [file], title: name }).then(() => true).catch(() => false); } catch (e) {}
+  const a = document.createElement("a"), u = URL.createObjectURL(blob); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+  return Promise.resolve(true);
+}
+function backup() {
+  if (NATIVE) {
+    const ok = NATIVE.saveFile("darna-backup-" + ymd() + ".json", "application/json", JSON.stringify({ app: "darna", state: S, photo: lsGet(PHOTO_KEY) || "" }), true);
+    if (ok) { setPref("lastBackup", ymd()); renderMe(); toast(t("Backup saved in Downloads/Darna.")); } else toast(t("Could not save the file."), true);
+    return;
+  }
+  shareOrDownload(JSON.stringify({ app: "darna", state: S, photo: lsGet(PHOTO_KEY) || "" }), "darna-backup-" + ymd() + ".json", "application/json")
+    .then(ok => { if (ok) { setPref("lastBackup", ymd()); renderMe(); toast(t("Backup saved.")); } });
+}
+function importBackup(ev) {
+  const f = ev.target.files && ev.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result); if (!d || d.app !== "darna" || !d.state) throw new Error("x");
+      S = mergeState(S, d.state); normalize(); save(); if (d.photo) lsSet(PHOTO_KEY, d.photo); toast(t("Restored.")); renderAll();
+    } catch (e) { toast(t("That file is not a Darna backup."), true); }
+  };
+  r.readAsText(f); ev.target.value = "";
+}
+function exportIcs() {
+  const P = prefs(), day = n(P.remDay == null ? 5 : P.remDay), [hh, mm] = (P.remTime || "19:00").split(":").map(Number), BY = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+  const now = new Date(), first = new Date(now); first.setHours(hh, mm, 0, 0);
+  while (first.getDay() !== day || first < now) first.setDate(first.getDate() + 1);
+  const dt = d => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(d.getHours()) + pad(d.getMinutes()) + "00";
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Darna//EN", "X-WR-CALNAME:Darna", "BEGIN:VEVENT", "UID:payday@darna", "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, ""),
+    "DTSTART:" + dt(first), "DURATION:PT15M", "SUMMARY:" + t("Darna: payday"), "DESCRIPTION:" + t("Add this week's contribution to our home."), "RRULE:FREQ=WEEKLY;BYDAY=" + BY[day],
+    "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + t("Darna: payday"), "TRIGGER:PT0M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  shareOrDownload(ics, "darna-reminder.ics", "text/calendar").then(() => toast(t("Calendar file ready. Tap \"Add All\" to add the reminder.")));
+}
+
+/* ==================== FEEDBACK ==================== */
+let toastT = null;
+function toast(msg, bad) { if (bad) play("err"); const el = document.getElementById("toast"); el.textContent = msg; el.style.display = "block"; el.style.background = bad ? "var(--red)" : "var(--ink)"; clearTimeout(toastT); toastT = setTimeout(() => el.style.display = "none", 3600); }
+function confetti(count) {
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.createElement("div"); box.className = "confetti"; const cols = S.members.map(m => m.color).concat(["#ffb703", "#ff4f8b", "#4b5cff"]);
+  for (let i = 0; i < count; i++) { const c = document.createElement("i"); c.style.left = Math.random() * 100 + "%"; c.style.background = cols[i % cols.length]; c.style.animationDelay = Math.random() * .5 + "s"; box.appendChild(c); }
+  document.body.appendChild(box); setTimeout(() => box.remove(), 3000);
+}
+/* ==================== SOUND & TOUCH ====================
+   Short synthesized sounds, no files, so they work offline.
+   The theme is a house being built: wood, bells and a small crowd cheering. */
+const SND_KEY = "DARNA_SOUND_V1", VIB_KEY = "DARNA_VIB_V1";
+function soundOn() { return prefs().sound !== false; }
+function vibOn() { return prefs().vib !== false; }
+function buzz(ms) { try { if (vibOn() && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+let actx = null, audioReady = false;
+function ac() {
+  try {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === "suspended") actx.resume();
+    return actx;
+  } catch (e) { return null; }
+}
+// a browser only lets sound start after the person touches the screen
+function unlockAudio() { if (audioReady) return; audioReady = true; const c = ac(); if (c) { const o = c.createOscillator(), g = c.createGain(); g.gain.value = 0.0001; o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + 0.01); } }
+["pointerdown", "touchstart", "keydown"].forEach(e => document.addEventListener(e, unlockAudio, { once: true, passive: true }));
+
+function voice(c, f, t, d, type, vol, toF) {
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type || "sine";
+  o.frequency.setValueAtTime(f, t);
+  if (toF) o.frequency.exponentialRampToValueAtTime(Math.max(20, toF), t + d);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol == null ? 0.1 : vol), t + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+  o.connect(g); g.connect(c.destination);
+  o.start(t); o.stop(t + d + 0.03);
+}
+function bell(c, f, t, d, vol) {
+  voice(c, f, t, d, "sine", vol == null ? 0.09 : vol);
+  voice(c, f * 2.76, t, d * 0.5, "sine", (vol == null ? 0.09 : vol) * 0.28);
+}
+function thud(c, t, vol) {
+  try {
+    const n = Math.floor(c.sampleRate * 0.14), buf = c.createBuffer(1, n, c.sampleRate), ch = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
+    const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    src.buffer = buf; f.type = "lowpass"; f.frequency.value = 500;
+    g.gain.value = vol == null ? 0.22 : vol;
+    src.connect(f); f.connect(g); g.connect(c.destination); src.start(t);
+  } catch (e) {}
+  voice(c, 110, t, 0.14, "sine", 0.2, 60);
+}
+const SOUNDS = {
+  tap: (c, t) => voice(c, 880, t, 0.05, "sine", 0.05),
+  nav: (c, t) => voice(c, 1174.7, t, 0.07, "sine", 0.05),
+  open: (c, t) => { voice(c, 660, t, 0.07, "sine", 0.05, 990); },
+  close: (c, t) => { voice(c, 740, t, 0.07, "sine", 0.04, 480); },
+  // a contribution: a coin, then a brick settling into the wall
+  save: (c, t) => { bell(c, 1318.5, t, 0.3, 0.1); bell(c, 1975.5, t + 0.08, 0.45, 0.08); thud(c, t + 0.2, 0.14); },
+  // money arriving from a sister far away
+  arrive: (c, t) => { bell(c, 987.8, t, 0.35, 0.08); bell(c, 1318.5, t + 0.12, 0.5, 0.08); },
+  heart: (c, t) => { voice(c, 1568, t, 0.12, "sine", 0.07); voice(c, 2093, t + 0.07, 0.2, "sine", 0.05); },
+  msg: (c, t) => { voice(c, 784, t, 0.08, "sine", 0.07); voice(c, 1174.7, t + 0.06, 0.16, "sine", 0.06); },
+  // a room of the future home opens: a key turning, then a bell
+  room: (c, t) => { thud(c, t, 0.1); [1046.5, 1318.5, 1568].forEach((f, i) => bell(c, f, t + 0.1 + i * 0.09, 0.4, 0.08)); },
+  // a new building stage
+  stage: (c, t) => { thud(c, t, 0.2); [523.3, 659.3, 784, 1046.5].forEach((f, i) => bell(c, f, t + 0.14 + i * 0.1, 0.5, 0.09)); },
+  // a milestone: the whole family cheering
+  mile: (c, t) => {
+    [523.3, 659.3, 784, 1046.5, 1318.5].forEach((f, i) => bell(c, f, t + i * 0.1, 0.55, 0.1));
+    [1046.5, 1318.5, 1568, 2093].forEach(f => bell(c, f, t + 0.62, 1.1, 0.07));
+  },
+  err: (c, t) => { voice(c, 311.1, t, 0.18, "triangle", 0.1); voice(c, 261.6, t + 0.11, 0.26, "triangle", 0.09); },
+  del: (c, t) => voice(c, 420, t, 0.16, "triangle", 0.08, 220)
+};
+function play(name) {
+  if (!soundOn()) return;
+  try { const c = ac(); if (!c) return; (SOUNDS[name] || SOUNDS.tap)(c, c.currentTime + 0.01); } catch (e) {}
+}
+// kept for the places that already called these
+function chime() { play("save"); }
+function fanfare() { play("mile"); }
+function tone() {}
+function tap(name, ms) { play(name || "tap"); buzz(ms || 10); }
+
+function renderSound() {
+  setText("sndHead", t("Sound & touch"));
+  setText("lblSnd", t("Sound")); setText("lblVib", t("Vibration"));
+  const on = soundOn(), v = vibOn();
+  document.getElementById("sndOn").className = on ? "on" : "";
+  document.getElementById("sndOff").className = on ? "" : "on";
+  document.getElementById("vibOn").className = v ? "on" : "";
+  document.getElementById("vibOff").className = v ? "" : "on";
+  setText("sndOnT", t("On")); setText("sndOffT", t("Off")); setText("vibOnT", t("On")); setText("vibOffT", t("Off"));
+  setText("btnSndTry", t("Hear it"));
+}
+function setSound(on) { setPref("sound", !!on); renderSound(); if (on) play("save"); }
+function setVib(on) { setPref("vib", !!on); renderSound(); if (on) buzz(25); }
+function trySound() { ["save", "room", "mile"].forEach((n, i) => setTimeout(() => play(n), i * 900)); buzz(20); }
+
+/* ==================== START ==================== */
+load(); applyTheme(); applyLang(); checkMiles(true); renderAll(); initSync(); nativeSync(); setTimeout(maybeDaily, 700);
+// the page started fine: tell the phone to keep this version, then look for a newer one
+setTimeout(() => { try { if (NATIVE && NATIVE.bootOk) NATIVE.bootOk(); } catch (e) {} pageCheck(false); }, 4000);
+if (!NATIVE && "serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
